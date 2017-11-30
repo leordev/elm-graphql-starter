@@ -6253,6 +6253,137 @@ var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
 var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
 var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
 
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
+
 var _elm_lang$dom$Native_Dom = function() {
 
 var fakeNode = {
@@ -13919,6 +14050,1852 @@ var _evancz$url_parser$UrlParser$intParam = function (name) {
 	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
 };
 
+var _jamesmacaulay$elm_graphql$GraphQL_Response$RequestError = F2(
+	function (a, b) {
+		return {message: a, locations: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Response$DocumentLocation = F2(
+	function (a, b) {
+		return {line: a, column: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Response$documentLocationDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_jamesmacaulay$elm_graphql$GraphQL_Response$DocumentLocation,
+	A2(_elm_lang$core$Json_Decode$field, 'line', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'column', _elm_lang$core$Json_Decode$int));
+var _jamesmacaulay$elm_graphql$GraphQL_Response$errorsDecoder = _elm_lang$core$Json_Decode$list(
+	A3(
+		_elm_lang$core$Json_Decode$map2,
+		_jamesmacaulay$elm_graphql$GraphQL_Response$RequestError,
+		A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string),
+		_elm_lang$core$Json_Decode$oneOf(
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$core$Json_Decode$field,
+					'locations',
+					_elm_lang$core$Json_Decode$list(_jamesmacaulay$elm_graphql$GraphQL_Response$documentLocationDecoder)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Json_Decode$succeed(
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}
+			})));
+
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$errorsResponseDecoder = A2(_elm_lang$core$Json_Decode$field, 'errors', _jamesmacaulay$elm_graphql$GraphQL_Response$errorsDecoder);
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$convertHttpError = F3(
+	function (wrapHttpError, wrapGraphQLError, httpError) {
+		var handleErrorWithResponseBody = function (responseBody) {
+			return A2(
+				_elm_lang$core$Result$withDefault,
+				wrapHttpError(httpError),
+				A2(
+					_elm_lang$core$Result$map,
+					wrapGraphQLError,
+					A2(_elm_lang$core$Json_Decode$decodeString, _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$errorsResponseDecoder, responseBody)));
+		};
+		var _p0 = httpError;
+		switch (_p0.ctor) {
+			case 'BadStatus':
+				return handleErrorWithResponseBody(_p0._0.body);
+			case 'BadPayload':
+				return handleErrorWithResponseBody(_p0._1.body);
+			default:
+				return wrapHttpError(httpError);
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultExpect = function (_p1) {
+	return _elm_lang$http$Http$expectJson(
+		A2(_elm_lang$core$Json_Decode$field, 'data', _p1));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultRequestOptions = function (url) {
+	return {
+		method: 'POST',
+		headers: {ctor: '[]'},
+		url: url,
+		timeout: _elm_lang$core$Maybe$Nothing,
+		withCredentials: false
+	};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$parameterizedUrl = F3(
+	function (url, documentString, variableValues) {
+		var variablesParam = A2(
+			_elm_lang$core$Maybe$withDefault,
+			'',
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (obj) {
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						'&variables=',
+						_elm_lang$http$Http$encodeUri(
+							A2(_elm_lang$core$Json_Encode$encode, 0, obj)));
+				},
+				variableValues));
+		var firstParamPrefix = A2(_elm_lang$core$String$contains, '?', url) ? '&' : '?';
+		var queryParam = A2(
+			_elm_lang$core$Basics_ops['++'],
+			firstParamPrefix,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'query=',
+				_elm_lang$http$Http$encodeUri(documentString)));
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			url,
+			A2(_elm_lang$core$Basics_ops['++'], queryParam, variablesParam));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$postBodyJson = F2(
+	function (documentString, variableValues) {
+		var extraParams = A2(
+			_elm_lang$core$Maybe$withDefault,
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (obj) {
+					return {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'variables', _1: obj},
+						_1: {ctor: '[]'}
+					};
+				},
+				variableValues));
+		var documentValue = _elm_lang$core$Json_Encode$string(documentString);
+		return _elm_lang$core$Json_Encode$object(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'query', _1: documentValue},
+					_1: {ctor: '[]'}
+				},
+				extraParams));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$postBody = F2(
+	function (documentString, variableValues) {
+		return _elm_lang$http$Http$jsonBody(
+			A2(_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$postBodyJson, documentString, variableValues));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$requestConfig = F4(
+	function (requestOptions, documentString, expect, variableValues) {
+		var _p2 = _elm_lang$core$Native_Utils.eq(requestOptions.method, 'GET') ? {
+			ctor: '_Tuple2',
+			_0: A3(_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$parameterizedUrl, requestOptions.url, documentString, variableValues),
+			_1: _elm_lang$http$Http$emptyBody
+		} : {
+			ctor: '_Tuple2',
+			_0: requestOptions.url,
+			_1: A2(_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$postBody, documentString, variableValues)
+		};
+		var url = _p2._0;
+		var body = _p2._1;
+		return {method: requestOptions.method, headers: requestOptions.headers, url: url, body: body, expect: expect, timeout: requestOptions.timeout, withCredentials: requestOptions.withCredentials};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$RequestOptions = F5(
+	function (a, b, c, d, e) {
+		return {method: a, headers: b, url: c, timeout: d, withCredentials: e};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$RequestError = F2(
+	function (a, b) {
+		return {message: a, locations: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$DocumentLocation = F2(
+	function (a, b) {
+		return {line: a, column: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$RequestConfig = F7(
+	function (a, b, c, d, e, f, g) {
+		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$GraphQLError = function (a) {
+	return {ctor: 'GraphQLError', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$HttpError = function (a) {
+	return {ctor: 'HttpError', _0: a};
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$OperationDefinitionInfo = F5(
+	function (a, b, c, d, e) {
+		return {operationType: a, name: b, variableDefinitions: c, directives: d, selectionSet: e};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FieldInfo = F5(
+	function (a, b, c, d, e) {
+		return {alias: a, name: b, $arguments: c, directives: d, selectionSet: e};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentSpreadInfo = F2(
+	function (a, b) {
+		return {name: a, directives: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$InlineFragmentInfo = F3(
+	function (a, b, c) {
+		return {typeCondition: a, directives: b, selectionSet: c};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentDefinitionInfo = F4(
+	function (a, b, c, d) {
+		return {name: a, typeCondition: b, directives: c, selectionSet: d};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableDefinitionInfo = F3(
+	function (a, b, c) {
+		return {name: a, variableType: b, defaultValue: c};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$DirectiveInfo = F2(
+	function (a, b) {
+		return {name: a, $arguments: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Document = function (a) {
+	return {ctor: 'Document', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentDefinition = function (a) {
+	return {ctor: 'FragmentDefinition', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$QueryShorthand = function (a) {
+	return {ctor: 'QueryShorthand', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$OperationDefinition = function (a) {
+	return {ctor: 'OperationDefinition', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Mutation = {ctor: 'Mutation'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Query = {ctor: 'Query'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$SelectionSet = function (a) {
+	return {ctor: 'SelectionSet', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$InlineFragment = function (a) {
+	return {ctor: 'InlineFragment', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentSpread = function (a) {
+	return {ctor: 'FragmentSpread', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Field = function (a) {
+	return {ctor: 'Field', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeCondition = function (a) {
+	return {ctor: 'TypeCondition', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ObjectValue = function (a) {
+	return {ctor: 'ObjectValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ListValue = function (a) {
+	return {ctor: 'ListValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$EnumValue = function (a) {
+	return {ctor: 'EnumValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NullValue = {ctor: 'NullValue'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$BooleanValue = function (a) {
+	return {ctor: 'BooleanValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$StringValue = function (a) {
+	return {ctor: 'StringValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FloatValue = function (a) {
+	return {ctor: 'FloatValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$IntValue = function (a) {
+	return {ctor: 'IntValue', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableValue = F2(
+	function (a, b) {
+		return {ctor: 'VariableValue', _0: a, _1: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableDefinition = function (a) {
+	return {ctor: 'VariableDefinition', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeRef = F2(
+	function (a, b) {
+		return {ctor: 'TypeRef', _0: a, _1: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NonNull = {ctor: 'NonNull'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Nullable = {ctor: 'Nullable'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ListTypeRef = function (a) {
+	return {ctor: 'ListTypeRef', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NamedTypeRef = function (a) {
+	return {ctor: 'NamedTypeRef', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Directive = function (a) {
+	return {ctor: 'Directive', _0: a};
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$nullable = function (_p0) {
+	var _p1 = _p0;
+	return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeRef, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Nullable, _p1._1);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$list = function (_p2) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeRef,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NonNull,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ListTypeRef(_p2));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType = function (_p3) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeRef,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NonNull,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NamedTypeRef(_p3));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$int = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType('Int');
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$float = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType('Float');
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$string = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType('String');
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$boolean = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType('Boolean');
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$id = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType('ID');
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$toDefinitionAST = function ($var) {
+	var _p0 = $var;
+	if (_p0.ctor === 'RequiredVariable') {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableDefinition(
+			{name: _p0._0, variableType: _p0._1, defaultValue: _elm_lang$core$Maybe$Nothing});
+	} else {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableDefinition(
+			{
+				name: _p0._0,
+				variableType: _p0._1,
+				defaultValue: _elm_lang$core$Maybe$Just(_p0._3)
+			});
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$name = function ($var) {
+	var _p1 = $var;
+	if (_p1.ctor === 'RequiredVariable') {
+		return _p1._0;
+	} else {
+		return _p1._0;
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$valueFromSource = F2(
+	function (source, $var) {
+		var _p2 = $var;
+		if (_p2.ctor === 'RequiredVariable') {
+			return _elm_lang$core$Maybe$Just(
+				{
+					ctor: '_Tuple2',
+					_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$name($var),
+					_1: _p2._2(source)
+				});
+		} else {
+			var _p3 = _p2._2(source);
+			if (_p3.ctor === 'Nothing') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				return _elm_lang$core$Maybe$Just(
+					{
+						ctor: '_Tuple2',
+						_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$name($var),
+						_1: _p3._0
+					});
+			}
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$extractValuesFrom = F2(
+	function (source, vars) {
+		return A2(
+			_elm_lang$core$List$filterMap,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$valueFromSource(source),
+			vars);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$fieldTuple = F2(
+	function (source, _p4) {
+		var _p5 = _p4;
+		return A2(
+			_elm_lang$core$Maybe$map,
+			function (value) {
+				return {ctor: '_Tuple2', _0: _p5._0, _1: value};
+			},
+			_p5._2(source));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec = F3(
+	function (a, b, c) {
+		return {ctor: 'VariableSpec', _0: a, _1: b, _2: c};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$Nullable = {ctor: 'Nullable'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$nullable = function (_p6) {
+	var _p7 = _p6;
+	return A3(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$Nullable,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$nullable(_p7._1),
+		function (_p8) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NullValue,
+				A2(_elm_lang$core$Maybe$map, _p7._2, _p8));
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull = {ctor: 'NonNull'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$int = A3(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$int, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$IntValue);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$float = A3(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$float, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FloatValue);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$string = A3(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$string, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$StringValue);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$bool = A3(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$boolean, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$BooleanValue);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$id = A3(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$id, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$StringValue);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$enum = F2(
+	function (typeName, convert) {
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType(typeName),
+			function (_p9) {
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$EnumValue(
+					convert(_p9));
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$list = function (_p10) {
+	var _p11 = _p10;
+	return A3(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$list(_p11._1),
+		function (_p12) {
+			return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ListValue(
+				A2(_elm_lang$core$List$map, _p11._2, _p12));
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$object = F2(
+	function (typeName, fields) {
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$VariableSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$NonNull,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$namedType(typeName),
+			function (source) {
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ObjectValue(
+					A2(
+						_elm_lang$core$List$filterMap,
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$fieldTuple(source),
+						fields));
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$OptionalVariable = F4(
+	function (a, b, c, d) {
+		return {ctor: 'OptionalVariable', _0: a, _1: b, _2: c, _3: d};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$optional = F4(
+	function (name, extractMaybe, _p13, defaultValue) {
+		var _p14 = _p13;
+		var _p16 = _p14._2;
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$OptionalVariable,
+			name,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_TypeRef$nullable(_p14._1),
+			function (_p15) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					_p16,
+					extractMaybe(_p15));
+			},
+			_p16(defaultValue));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$RequiredVariable = F3(
+	function (a, b, c) {
+		return {ctor: 'RequiredVariable', _0: a, _1: b, _2: c};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$required = F3(
+	function (name, extract, _p17) {
+		var _p18 = _p17;
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$RequiredVariable,
+			name,
+			_p18._1,
+			function (_p19) {
+				return _p18._2(
+					extract(_p19));
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$Field = F3(
+	function (a, b, c) {
+		return {ctor: 'Field', _0: a, _1: b, _2: c};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$field = F3(
+	function (name, extract, _p20) {
+		var _p21 = _p20;
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$Field,
+			name,
+			_p21._1,
+			function (_p22) {
+				return _elm_lang$core$Maybe$Just(
+					_p21._2(
+						extract(_p22)));
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$optionalField = F3(
+	function (name, extract, _p23) {
+		var _p24 = _p23;
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$Field,
+			name,
+			_p24._1,
+			function (_p25) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					_p24._2,
+					extract(_p25));
+			});
+	});
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$variableIsNotInList = F2(
+	function (existingVars, thisVar) {
+		var thisVarAST = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$toDefinitionAST(thisVar);
+		var sameASTAsThisVar = function ($var) {
+			return _elm_lang$core$Native_Utils.eq(
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$toDefinitionAST($var),
+				thisVarAST);
+		};
+		return !A2(_elm_lang$core$List$any, sameASTAsThisVar, existingVars);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables = F2(
+	function (varsA, varsB) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			varsA,
+			A2(
+				_elm_lang$core$List$filter,
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$variableIsNotInList(varsA),
+				varsB));
+	});
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$getVariables = function (_p0) {
+	var _p1 = _p0;
+	return _p1._1;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$getAST = function (_p2) {
+	var _p3 = _p2;
+	return _p3._0;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$valueVariablesFoldStep = function (_p4) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$getVariables(_p4));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value = F2(
+	function (a, b) {
+		return {ctor: 'Value', _0: a, _1: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$variable = function ($var) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$VariableValue,
+			{ctor: '_Tuple0'},
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$name($var)),
+		{
+			ctor: '::',
+			_0: $var,
+			_1: {ctor: '[]'}
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$int = function (x) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$IntValue(x),
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$float = function (x) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FloatValue(x),
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$string = function (x) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$StringValue(x),
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$bool = function (x) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$BooleanValue(x),
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$true = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$bool(true);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$false = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$bool(false);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$null = A2(
+	_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+	_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$NullValue,
+	{ctor: '[]'});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$enum = function (symbol) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$EnumValue(symbol),
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$object = function (pairs) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ObjectValue(
+			A2(
+				_elm_lang$core$List$map,
+				function (_p5) {
+					var _p6 = _p5;
+					return {ctor: '_Tuple2', _0: _p6._0, _1: _p6._1._0};
+				},
+				pairs)),
+		A3(
+			_elm_lang$core$List$foldr,
+			function (_p7) {
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$valueVariablesFoldStep(
+					_elm_lang$core$Tuple$second(_p7));
+			},
+			{ctor: '[]'},
+			pairs));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$list = function (values) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$Value,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$ListValue(
+			A2(
+				_elm_lang$core$List$map,
+				function (_p8) {
+					var _p9 = _p8;
+					return _p9._0;
+				},
+				values)),
+		A3(
+			_elm_lang$core$List$foldr,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$valueVariablesFoldStep,
+			{ctor: '[]'},
+			values));
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeCondition = function (_p0) {
+	var _p1 = _p0;
+	return A2(_elm_lang$core$Basics_ops['++'], 'on ', _p1._0);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentSpreadName = function (name) {
+	return A2(_elm_lang$core$Basics_ops['++'], '...', name);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFieldAlias = function (alias) {
+	return A2(_elm_lang$core$Basics_ops['++'], alias, ':');
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent = F2(
+	function (level, string) {
+		return (_elm_lang$core$Native_Utils.cmp(level, 0) < 1) ? string : A2(
+			_elm_lang$core$Basics_ops['++'],
+			'  ',
+			A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent, level - 1, string));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirectiveName = function (name) {
+	return A2(_elm_lang$core$Basics_ops['++'], '@', name);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeValue = function (value) {
+	var _p2 = value;
+	switch (_p2.ctor) {
+		case 'VariableValue':
+			return A2(_elm_lang$core$Basics_ops['++'], '$', _p2._1);
+		case 'IntValue':
+			return _elm_lang$core$Basics$toString(_p2._0);
+		case 'FloatValue':
+			return _elm_lang$core$Basics$toString(_p2._0);
+		case 'StringValue':
+			return _elm_lang$core$Basics$toString(_p2._0);
+		case 'BooleanValue':
+			if (_p2._0 === true) {
+				return 'true';
+			} else {
+				return 'false';
+			}
+		case 'NullValue':
+			return 'null';
+		case 'EnumValue':
+			return _p2._0;
+		case 'ListValue':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'[',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					A2(
+						_elm_lang$core$String$join,
+						', ',
+						A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeValue, _p2._0)),
+					']'));
+		default:
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'{',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					A2(
+						_elm_lang$core$String$join,
+						', ',
+						A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeKeyValuePair, _p2._0)),
+					'}'));
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeKeyValuePair = function (_p3) {
+	var _p4 = _p3;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_p4._0,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			': ',
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeValue(_p4._1)));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeArgList = function (args) {
+	return _elm_lang$core$List$isEmpty(args) ? {ctor: '[]'} : {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'(',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$String$join,
+					', ',
+					A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeKeyValuePair, args)),
+				')')),
+		_1: {ctor: '[]'}
+	};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective = function (_p5) {
+	var _p6 = _p5;
+	return A2(
+		_elm_lang$core$String$join,
+		'',
+		{
+			ctor: '::',
+			_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirectiveName(_p6._0.name),
+			_1: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeArgList(_p6._0.$arguments)
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentSpread = F2(
+	function (indentLevel, _p7) {
+		var _p8 = _p7;
+		return A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent,
+			indentLevel,
+			A2(
+				_elm_lang$core$String$join,
+				' ',
+				{
+					ctor: '::',
+					_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentSpreadName(_p8.name),
+					_1: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective, _p8.directives)
+				}));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeNullability = function (nullability) {
+	var _p9 = nullability;
+	if (_p9.ctor === 'Nullable') {
+		return '';
+	} else {
+		return '!';
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDefaultValue = function (value) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'= ',
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeValue(value));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeRef = function (_p10) {
+	var _p11 = _p10;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeCoreTypeRef(_p11._1),
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeNullability(_p11._0));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeCoreTypeRef = function (coreTypeRef) {
+	var _p12 = coreTypeRef;
+	if (_p12.ctor === 'NamedTypeRef') {
+		return _p12._0;
+	} else {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'[',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeRef(_p12._0),
+				']'));
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableName = function (name) {
+	return A2(_elm_lang$core$Basics_ops['++'], '$', name);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeOperationType = function (opType) {
+	var _p13 = opType;
+	if (_p13.ctor === 'Query') {
+		return 'query';
+	} else {
+		return 'mutation';
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$listFromMaybe = function (m) {
+	var _p14 = m;
+	if (_p14.ctor === 'Nothing') {
+		return {ctor: '[]'};
+	} else {
+		return {
+			ctor: '::',
+			_0: _p14._0,
+			_1: {ctor: '[]'}
+		};
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableDefinition = function (_p15) {
+	var _p16 = _p15;
+	var _p17 = _p16._0;
+	return A2(
+		_elm_lang$core$String$join,
+		' ',
+		_elm_lang$core$List$concat(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$core$Basics_ops['++'],
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableName(_p17.name),
+						':'),
+					_1: {
+						ctor: '::',
+						_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeRef(_p17.variableType),
+						_1: {ctor: '[]'}
+					}
+				},
+				_1: {
+					ctor: '::',
+					_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$listFromMaybe(
+						A2(_elm_lang$core$Maybe$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDefaultValue, _p17.defaultValue)),
+					_1: {ctor: '[]'}
+				}
+			}));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableDefinitions = function (defs) {
+	return _elm_lang$core$List$isEmpty(defs) ? {ctor: '[]'} : {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'(',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$String$join,
+					', ',
+					A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableDefinition, defs)),
+				')')),
+		_1: {ctor: '[]'}
+	};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeInlineFragment = F2(
+	function (indentLevel, _p18) {
+		var _p19 = _p18;
+		return A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent,
+			indentLevel,
+			A2(
+				_elm_lang$core$String$join,
+				' ',
+				_elm_lang$core$List$concat(
+					{
+						ctor: '::',
+						_0: {
+							ctor: '::',
+							_0: '...',
+							_1: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$listFromMaybe(
+								A2(_elm_lang$core$Maybe$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeCondition, _p19.typeCondition))
+						},
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective, _p19.directives),
+							_1: {
+								ctor: '::',
+								_0: A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet, indentLevel, _p19.selectionSet),
+								_1: {ctor: '[]'}
+							}
+						}
+					})));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet = F2(
+	function (indentLevel, _p20) {
+		var _p21 = _p20;
+		var _p22 = _p21._0;
+		return _elm_lang$core$List$isEmpty(_p22) ? {ctor: '[]'} : {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'{\n',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					A2(
+						_elm_lang$core$String$join,
+						'\n',
+						A2(
+							_elm_lang$core$List$map,
+							_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelection(indentLevel + 1),
+							_p22)),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'\n',
+						A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent, indentLevel, '}')))),
+			_1: {ctor: '[]'}
+		};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelection = F2(
+	function (indentLevel, selection) {
+		var _p23 = selection;
+		switch (_p23.ctor) {
+			case 'Field':
+				return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeField, indentLevel, _p23._0);
+			case 'FragmentSpread':
+				return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentSpread, indentLevel, _p23._0);
+			default:
+				return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeInlineFragment, indentLevel, _p23._0);
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeField = F2(
+	function (indentLevel, field) {
+		return A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$indent,
+			indentLevel,
+			A2(
+				_elm_lang$core$String$join,
+				' ',
+				_elm_lang$core$List$concat(
+					{
+						ctor: '::',
+						_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$listFromMaybe(
+							A2(_elm_lang$core$Maybe$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFieldAlias, field.alias)),
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$String$join,
+									'',
+									{
+										ctor: '::',
+										_0: field.name,
+										_1: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeArgList(field.$arguments)
+									}),
+								_1: {ctor: '[]'}
+							},
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective, field.directives),
+								_1: {
+									ctor: '::',
+									_0: A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet, indentLevel, field.selectionSet),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					})));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeOperation = function (info) {
+	return A2(
+		_elm_lang$core$String$join,
+		' ',
+		_elm_lang$core$List$concat(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '::',
+					_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeOperationType(info.operationType),
+					_1: {ctor: '[]'}
+				},
+				_1: {
+					ctor: '::',
+					_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$listFromMaybe(info.name),
+					_1: {
+						ctor: '::',
+						_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeVariableDefinitions(info.variableDefinitions),
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective, info.directives),
+							_1: {
+								ctor: '::',
+								_0: A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet, 0, info.selectionSet),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentDefinition = function (_p24) {
+	var _p25 = _p24;
+	return A2(
+		_elm_lang$core$String$join,
+		' ',
+		_elm_lang$core$List$concat(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '::',
+					_0: 'fragment',
+					_1: {
+						ctor: '::',
+						_0: _p25.name,
+						_1: {
+							ctor: '::',
+							_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeTypeCondition(_p25.typeCondition),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDirective, _p25.directives),
+					_1: {
+						ctor: '::',
+						_0: A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet, 0, _p25.selectionSet),
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDefinition = function (definition) {
+	var _p26 = definition;
+	switch (_p26.ctor) {
+		case 'OperationDefinition':
+			return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeOperation(_p26._0);
+		case 'QueryShorthand':
+			return A2(
+				_elm_lang$core$String$join,
+				'',
+				A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeSelectionSet, 0, _p26._0));
+		default:
+			return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeFragmentDefinition(_p26._0);
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDocument = function (_p27) {
+	var _p28 = _p27;
+	return A2(
+		_elm_lang$core$String$join,
+		'\n\n',
+		A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDefinition, _p28._0));
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Util$responseKey = function (fieldInfo) {
+	var _p0 = fieldInfo.alias;
+	if (_p0.ctor === 'Nothing') {
+		return fieldInfo.name;
+	} else {
+		return _p0._0;
+	}
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Value_Json_Encode$encode = function (value) {
+	var _p0 = value;
+	switch (_p0.ctor) {
+		case 'VariableValue':
+			return _elm_lang$core$Json_Encode$null;
+		case 'IntValue':
+			return _elm_lang$core$Json_Encode$int(_p0._0);
+		case 'FloatValue':
+			return _elm_lang$core$Json_Encode$float(_p0._0);
+		case 'StringValue':
+			return _elm_lang$core$Json_Encode$string(_p0._0);
+		case 'BooleanValue':
+			return _elm_lang$core$Json_Encode$bool(_p0._0);
+		case 'NullValue':
+			return _elm_lang$core$Json_Encode$null;
+		case 'EnumValue':
+			return _elm_lang$core$Json_Encode$string(_p0._0);
+		case 'ListValue':
+			return _elm_lang$core$Json_Encode$list(
+				A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Value_Json_Encode$encode, _p0._0));
+		default:
+			return _elm_lang$core$Json_Encode$object(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Tuple$mapSecond(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Value_Json_Encode$encode),
+					_p0._0));
+	}
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mergeFragments = F2(
+	function (fragmentsA, fragmentsB) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			fragmentsA,
+			A2(
+				_elm_lang$core$List$filter,
+				function (fragment) {
+					return !A2(
+						_elm_lang$core$List$any,
+						F2(
+							function (x, y) {
+								return _elm_lang$core$Native_Utils.eq(x, y);
+							})(fragment),
+						fragmentsA);
+				},
+				fragmentsB));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentVariables = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._0.operation;
+	var spec = _p2._0.spec;
+	var _p3 = spec;
+	var vars = _p3._2;
+	return vars;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentString = function (_p4) {
+	var _p5 = _p4;
+	return _p5._0.serialized;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentAST = function (_p6) {
+	var _p7 = _p6;
+	return _p7._0.ast;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$operationTypeAST = function (operationType) {
+	var _p8 = operationType;
+	if (_p8.ctor === 'QueryOperationType') {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Query;
+	} else {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Mutation;
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$variableDefinitionsAST = function (_p9) {
+	var _p10 = _p9;
+	return A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$toDefinitionAST, _p10._2);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptySelectionSet = _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$SelectionSet(
+	{ctor: '[]'});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType = function (sourceType) {
+	var _p11 = sourceType;
+	if (_p11.ctor === 'SpecifiedType') {
+		return _p11._0.selectionSet;
+	} else {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptySelectionSet;
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSpec = function (_p12) {
+	var _p13 = _p12;
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType(_p13._0);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$specDecoder = function (_p14) {
+	var _p15 = _p14;
+	return _p15._1(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType(_p15._0));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentResponseDecoder = function (_p16) {
+	var _p17 = _p16;
+	var _p18 = _p17._0.operation;
+	var spec = _p18._0.spec;
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$specDecoder(spec);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mergeSelectionSets = F2(
+	function (_p20, _p19) {
+		var _p21 = _p20;
+		var _p22 = _p19;
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$SelectionSet(
+			A2(_elm_lang$core$Basics_ops['++'], _p21._0, _p22._0));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$decoderFromEnumLabel = F2(
+	function (fallbackDecoder, labelledValues) {
+		var valueFromLabel = A2(
+			_elm_lang$core$Basics$flip,
+			_elm_lang$core$Dict$get,
+			_elm_lang$core$Dict$fromList(labelledValues));
+		var decoder = function (enumString) {
+			var _p23 = valueFromLabel(enumString);
+			if (_p23.ctor === 'Just') {
+				return _elm_lang$core$Json_Decode$succeed(_p23._0);
+			} else {
+				return fallbackDecoder(enumString);
+			}
+		};
+		return decoder;
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromArguments = function ($arguments) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		function (_p24) {
+			return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables(
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$getVariables(
+					_elm_lang$core$Tuple$second(_p24)));
+		},
+		{ctor: '[]'},
+		$arguments);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromDirectives = _elm_lang$core$List$concatMap(
+	function (_p25) {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromArguments(
+			_elm_lang$core$Tuple$second(_p25));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentVariables = function (_p26) {
+	var _p27 = _p26;
+	var _p28 = _p27._0.spec;
+	var specVariables = _p28._2;
+	var directiveVariables = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromDirectives(_p27._0.directives);
+	return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables, directiveVariables, specVariables);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$argumentsAST = _elm_lang$core$List$map(
+	_elm_lang$core$Tuple$mapSecond(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$getAST));
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$directiveAST = function (_p29) {
+	var _p30 = _p29;
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Directive(
+		{
+			name: _p30._0,
+			$arguments: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$argumentsAST(_p30._1)
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$updateInfoWithDirectives = F2(
+	function (directives, info) {
+		return _elm_lang$core$Native_Utils.update(
+			info,
+			{
+				directives: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$directiveAST, directives)
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionASTWithDirectives = F2(
+	function (directives, selection) {
+		var _p31 = selection;
+		switch (_p31.ctor) {
+			case 'Field':
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Field(
+					A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$updateInfoWithDirectives, directives, _p31._0));
+			case 'FragmentSpread':
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentSpread(
+					A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$updateInfoWithDirectives, directives, _p31._0));
+			default:
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$InlineFragment(
+					A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$updateInfoWithDirectives, directives, _p31._0));
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$operationAST = function (_p32) {
+	var _p33 = _p32;
+	var _p34 = _p33._0.spec;
+	return {
+		operationType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$operationTypeAST(_p33._0.operationType),
+		name: _p33._0.name,
+		variableDefinitions: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$variableDefinitionsAST(_p34),
+		directives: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$directiveAST, _p33._0.directives),
+		selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSpec(_p34)
+	};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentAST = function (_p35) {
+	var _p36 = _p35;
+	return {
+		name: _p36._0.name,
+		typeCondition: _p36._0.typeCondition,
+		directives: A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$directiveAST, _p36._0.directives),
+		selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSpec(_p36._0.spec)
+	};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$onType = _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$TypeCondition;
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentDefinitionsFromOperation = function (_p37) {
+	var _p38 = _p37;
+	var _p39 = _p38._0.spec;
+	var fragments = _p39._3;
+	return fragments;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$responseDataDecoder = function (_p40) {
+	var _p41 = _p40;
+	return _p41._0.responseDataDecoder;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$variableValuesToJson = function (kvPairs) {
+	return _elm_lang$core$List$isEmpty(kvPairs) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+		_elm_lang$core$Json_Encode$object(
+			A2(
+				_elm_lang$core$List$map,
+				_elm_lang$core$Tuple$mapSecond(_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Value_Json_Encode$encode),
+				kvPairs)));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$jsonVariableValues = function (_p42) {
+	var _p43 = _p42;
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$variableValuesToJson(_p43._0.variableValues);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$requestBody = function (_p44) {
+	var _p45 = _p44;
+	return _p45._0.documentString;
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionDecoder = F2(
+	function (selectionAST, decoder) {
+		var _p46 = selectionAST;
+		if (_p46.ctor === 'Field') {
+			return function (_p47) {
+				return A2(
+					_elm_lang$core$Json_Decode$field,
+					_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Util$responseKey(_p46._0),
+					decoder(_p47));
+			};
+		} else {
+			return decoder;
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedTypeInfo = F4(
+	function (a, b, c, d) {
+		return {nullability: a, coreType: b, join: c, selectionSet: d};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Request = function (a) {
+	return {ctor: 'Request', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$request = F2(
+	function (vars, _p48) {
+		var _p49 = _p48;
+		var _p50 = _p49;
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Request(
+			{
+				documentAST: _p49._0.ast,
+				documentString: _p49._0.serialized,
+				variableValues: A2(
+					_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$extractValuesFrom,
+					vars,
+					_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentVariables(_p50)),
+				responseDataDecoder: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$documentResponseDecoder(_p50)
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Document = function (a) {
+	return {ctor: 'Document', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$document = function (operation) {
+	var fragmentDefinitions = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentDefinitionsFromOperation(operation);
+	var ast = _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Document(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(_elm_lang$core$List$map, _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentDefinition, fragmentDefinitions),
+			{
+				ctor: '::',
+				_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$OperationDefinition(
+					_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$operationAST(operation)),
+				_1: {ctor: '[]'}
+			}));
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Document(
+		{
+			operation: operation,
+			ast: ast,
+			serialized: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Serialize$serializeDocument(ast)
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Operation = function (a) {
+	return {ctor: 'Operation', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$MutationOperationType = {ctor: 'MutationOperationType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mutationOperationType = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$MutationOperationType;
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mutationDocument = function (spec) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$document(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Operation(
+			{
+				operationType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mutationOperationType,
+				name: _elm_lang$core$Maybe$Nothing,
+				directives: {ctor: '[]'},
+				spec: spec
+			}));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$QueryOperationType = {ctor: 'QueryOperationType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$queryOperationType = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$QueryOperationType;
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$queryDocument = function (spec) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$document(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Operation(
+			{
+				operationType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$queryOperationType,
+				name: _elm_lang$core$Maybe$Nothing,
+				directives: {ctor: '[]'},
+				spec: spec
+			}));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Query = {ctor: 'Query'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Mutation = {ctor: 'Mutation'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Fragment = function (a) {
+	return {ctor: 'Fragment', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragment = F3(
+	function (name, typeCondition, spec) {
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Fragment(
+			{
+				name: name,
+				typeCondition: typeCondition,
+				directives: {ctor: '[]'},
+				spec: spec
+			});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec = F4(
+	function (a, b, c, d) {
+		return {ctor: 'ValueSpec', _0: a, _1: b, _2: c, _3: d};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map = F2(
+	function (f, _p51) {
+		var _p52 = _p51;
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+			_p52._0,
+			function (_p53) {
+				return A2(
+					_elm_lang$core$Json_Decode$map,
+					f,
+					_p52._1(_p53));
+			},
+			_p52._2,
+			_p52._3);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec = F4(
+	function (a, b, c, d) {
+		return {ctor: 'SelectionSpec', _0: a, _1: b, _2: c, _3: d};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$field = F3(
+	function (name, $arguments, _p54) {
+		var _p55 = _p54;
+		var vars = A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromArguments($arguments),
+			_p55._2);
+		var astFieldInfo = {
+			alias: _elm_lang$core$Maybe$Nothing,
+			name: name,
+			$arguments: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$argumentsAST($arguments),
+			directives: {ctor: '[]'},
+			selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType(_p55._0)
+		};
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Field(astFieldInfo),
+			_p55._1,
+			vars,
+			_p55._3);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$withDirectives = F2(
+	function (directives, _p56) {
+		var _p57 = _p56;
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+			A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionASTWithDirectives, directives, _p57._0),
+			function (_p58) {
+				return _elm_lang$core$Json_Decode$maybe(
+					_p57._1(_p58));
+			},
+			A2(
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables,
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$varsFromDirectives(directives),
+				_p57._2),
+			_p57._3);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$assume = function (_p59) {
+	var _p60 = _p59;
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+		_p60._0,
+		function (_p61) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (maybeValue) {
+					var _p62 = maybeValue;
+					if (_p62.ctor === 'Just') {
+						return _elm_lang$core$Json_Decode$succeed(_p62._0);
+					} else {
+						return _elm_lang$core$Json_Decode$fail('Expected a selection to be present in the response with `assume`, but found `Nothing`');
+					}
+				},
+				_p60._1(_p61));
+		},
+		_p60._2,
+		_p60._3);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$aliasAs = F2(
+	function (responseKey, _p63) {
+		var _p64 = _p63;
+		var _p65 = _p64._0;
+		if (_p65.ctor === 'Field') {
+			return A4(
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$Field(
+					_elm_lang$core$Native_Utils.update(
+						_p65._0,
+						{
+							alias: _elm_lang$core$Maybe$Just(responseKey)
+						})),
+				_p64._1,
+				_p64._2,
+				_p64._3);
+		} else {
+			return _p64;
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentSpread = function (_p66) {
+	var _p67 = _p66;
+	var _p70 = _p67;
+	var _p68 = _p67._0.spec;
+	var decoder = _p68._1;
+	var nestedFragments = _p68._3;
+	var astFragmentSpreadInfo = {
+		name: _p67._0.name,
+		directives: {ctor: '[]'}
+	};
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$FragmentSpread(astFragmentSpreadInfo),
+		function (_p69) {
+			return _elm_lang$core$Json_Decode$maybe(
+				decoder(_p69));
+		},
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentVariables(_p70),
+		A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mergeFragments,
+			{
+				ctor: '::',
+				_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$fragmentAST(_p70),
+				_1: {ctor: '[]'}
+			},
+			nestedFragments));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$inlineFragment = F2(
+	function (maybeTypeCondition, spec) {
+		var _p71 = spec;
+		var sourceType = _p71._0;
+		var decoder = _p71._1;
+		var vars = _p71._2;
+		var fragments = _p71._3;
+		var astInlineFragmentInfo = {
+			typeCondition: maybeTypeCondition,
+			directives: {ctor: '[]'},
+			selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType(sourceType)
+		};
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SelectionSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$InlineFragment(astInlineFragmentInfo),
+			function (_p72) {
+				return _elm_lang$core$Json_Decode$maybe(
+					decoder(_p72));
+			},
+			vars,
+			fragments);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Field = {ctor: 'Field'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$FragmentSpread = {ctor: 'FragmentSpread'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$InlineFragment = {ctor: 'InlineFragment'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$AnyType = {ctor: 'AnyType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$produce = function (x) {
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$AnyType,
+		_elm_lang$core$Basics$always(
+			_elm_lang$core$Json_Decode$succeed(x)),
+		{ctor: '[]'},
+		{ctor: '[]'});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType = function (a) {
+	return {ctor: 'SpecifiedType', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$join = F2(
+	function (a, b) {
+		var _p73 = {ctor: '_Tuple2', _0: a, _1: b};
+		if (_p73._0.ctor === 'SpecifiedType') {
+			if (_p73._1.ctor === 'SpecifiedType') {
+				var _p75 = _p73._1._0;
+				var _p74 = _p73._0._0;
+				return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+					_elm_lang$core$Native_Utils.update(
+						_p74,
+						{
+							coreType: A2(_p74.join, _p74.coreType, _p75.coreType),
+							selectionSet: A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mergeSelectionSets, _p74.selectionSet, _p75.selectionSet)
+						}));
+			} else {
+				return a;
+			}
+		} else {
+			return b;
+		}
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map2 = F3(
+	function (f, _p77, _p76) {
+		var _p78 = _p77;
+		var _p79 = _p76;
+		var mergedFragments = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mergeFragments, _p78._3, _p79._3);
+		var mergedVariables = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable_Util$mergeVariables, _p78._2, _p79._2);
+		var joinedDecoder = function (selectionSet) {
+			return A3(
+				_elm_lang$core$Json_Decode$map2,
+				f,
+				_p78._1(selectionSet),
+				_p79._1(selectionSet));
+		};
+		var joinedSourceType = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$join, _p78._0, _p79._0);
+		return A4(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec, joinedSourceType, joinedDecoder, mergedVariables, mergedFragments);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$withLocalConstant = F2(
+	function (x, objectSpec) {
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map2,
+			F2(
+				function (x, y) {
+					return x(y);
+				}),
+			objectSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$produce(x));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$Nullable = {ctor: 'Nullable'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$NonNull = {ctor: 'NonNull'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$NonNullFlag = {ctor: 'NonNullFlag'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$NonNullFlag;
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec = F2(
+	function (coreType, decoder) {
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+				{nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag, coreType: coreType, join: _elm_lang$core$Basics$always, selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptySelectionSet}),
+			_elm_lang$core$Basics$always(decoder),
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$customScalar = F2(
+	function (customTypeMarker, decoder) {
+		return A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, customTypeMarker, decoder);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$NullableFlag = {ctor: 'NullableFlag'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nullableFlag = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$NullableFlag;
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nullable = function (_p80) {
+	var _p81 = _p80;
+	var _p87 = _p81._2;
+	var _p86 = _p81._3;
+	var _p85 = _p81._1;
+	var _p82 = _p81._0;
+	if (_p82.ctor === 'SpecifiedType') {
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+				_elm_lang$core$Native_Utils.update(
+					_p82._0,
+					{nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nullableFlag})),
+			function (_p83) {
+				return _elm_lang$core$Json_Decode$nullable(
+					_p85(_p83));
+			},
+			_p87,
+			_p86);
+	} else {
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$AnyType,
+			function (_p84) {
+				return _elm_lang$core$Json_Decode$nullable(
+					_p85(_p84));
+			},
+			_p87,
+			_p86);
+	}
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$IntType = {ctor: 'IntType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$int = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$IntType, _elm_lang$core$Json_Decode$int);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$FloatType = {ctor: 'FloatType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$float = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$FloatType, _elm_lang$core$Json_Decode$float);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$StringType = {ctor: 'StringType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$string = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$StringType, _elm_lang$core$Json_Decode$string);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$BooleanType = {ctor: 'BooleanType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$bool = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$BooleanType, _elm_lang$core$Json_Decode$bool);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$IdType = {ctor: 'IdType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$id = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$primitiveSpec, _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$IdType, _elm_lang$core$Json_Decode$string);
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$EnumType = function (a) {
+	return {ctor: 'EnumType', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumJoin = F2(
+	function (_p89, _p88) {
+		var _p90 = _p89;
+		var _p91 = _p88;
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$EnumType(
+			_elm_lang$core$Set$toList(
+				A2(
+					_elm_lang$core$Set$intersect,
+					_elm_lang$core$Set$fromList(_p91._0),
+					_elm_lang$core$Set$fromList(_p90._0))));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumWithFallback = F2(
+	function (fallbackDecoder, labelledValues) {
+		var labels = A2(_elm_lang$core$List$map, _elm_lang$core$Tuple$first, labelledValues);
+		var decoderFromLabel = A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$decoderFromEnumLabel, fallbackDecoder, labelledValues);
+		var decoder = A2(_elm_lang$core$Json_Decode$andThen, decoderFromLabel, _elm_lang$core$Json_Decode$string);
+		return A4(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+				{
+					nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag,
+					coreType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$EnumType(labels),
+					join: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumJoin,
+					selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptySelectionSet
+				}),
+			_elm_lang$core$Basics$always(decoder),
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enum = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumWithFallback(
+	function (label) {
+		return _elm_lang$core$Json_Decode$fail(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Unexpected enum value ',
+				_elm_lang$core$Basics$toString(label)));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumWithDefault = function (ctr) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$enumWithFallback(
+		function (label) {
+			return _elm_lang$core$Json_Decode$succeed(
+				ctr(label));
+		});
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ListType = function (a) {
+	return {ctor: 'ListType', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$listJoin = F2(
+	function (_p93, _p92) {
+		var _p94 = _p93;
+		var _p95 = _p92;
+		return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ListType(
+			A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$join, _p94._0, _p95._0));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$list = function (_p96) {
+	var _p97 = _p96;
+	var _p99 = _p97._0;
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+			{
+				nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag,
+				coreType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ListType(_p99),
+				join: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$listJoin,
+				selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionSetFromSourceType(_p99)
+			}),
+		function (_p98) {
+			return _elm_lang$core$Json_Decode$list(
+				_p97._1(_p98));
+		},
+		_p97._2,
+		_p97._3);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ObjectType = {ctor: 'ObjectType'};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$extract = function (_p100) {
+	var _p101 = _p100;
+	var _p102 = _p101._0;
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+			{
+				nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag,
+				coreType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ObjectType,
+				join: _elm_lang$core$Basics$always,
+				selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST$SelectionSet(
+					{
+						ctor: '::',
+						_0: _p102,
+						_1: {ctor: '[]'}
+					})
+			}),
+		A2(_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$selectionDecoder, _p102, _p101._1),
+		_p101._2,
+		_p101._3);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$keyValuePairs = function (selections) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		F2(
+			function (_p103, accSpec) {
+				var _p104 = _p103;
+				var _p105 = _p104._0;
+				if (_p105.ctor === 'Field') {
+					var keyValueSpec = A2(
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map,
+						function (value) {
+							return {
+								ctor: '_Tuple2',
+								_0: _jamesmacaulay$elm_graphql$GraphQL_Request_Document_AST_Util$responseKey(_p105._0),
+								_1: value
+							};
+						},
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$extract(_p104));
+					return A3(
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map2,
+						F2(
+							function (x, y) {
+								return {ctor: '::', _0: x, _1: y};
+							}),
+						keyValueSpec,
+						accSpec);
+				} else {
+					return accSpec;
+				}
+			}),
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$produce(
+			{ctor: '[]'}),
+		selections);
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$dict = function (_p106) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map,
+		_elm_lang$core$Dict$fromList,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$keyValuePairs(_p106));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$with = F2(
+	function (selection, objectSpec) {
+		return A3(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$map2,
+			F2(
+				function (x, y) {
+					return x(y);
+				}),
+			objectSpec,
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$extract(selection));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptyObjectSpecifiedType = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$SpecifiedType(
+	{nullability: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$nonNullFlag, coreType: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ObjectType, join: _elm_lang$core$Basics$always, selectionSet: _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptySelectionSet});
+var _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$object = function (ctr) {
+	return A4(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$ValueSpec,
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$emptyObjectSpecifiedType,
+		_elm_lang$core$Basics$always(
+			_elm_lang$core$Json_Decode$succeed(ctr)),
+		{ctor: '[]'},
+		{ctor: '[]'});
+};
+
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$rawExpect = _elm_lang$http$Http$expectStringResponse(_elm_lang$core$Result$Ok);
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$RequestError = F2(
+	function (a, b) {
+		return {message: a, locations: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$DocumentLocation = F2(
+	function (a, b) {
+		return {line: a, column: b};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$RequestOptions = F5(
+	function (a, b, c, d, e) {
+		return {method: a, headers: b, url: c, timeout: d, withCredentials: e};
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$GraphQLError = function (a) {
+	return {ctor: 'GraphQLError', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$HttpError = function (a) {
+	return {ctor: 'HttpError', _0: a};
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting = F3(
+	function (expect, requestOptions, request) {
+		var variableValues = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$jsonVariableValues(request);
+		var documentString = _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$requestBody(request);
+		return A2(
+			_elm_lang$core$Task$mapError,
+			A2(_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$convertHttpError, _jamesmacaulay$elm_graphql$GraphQL_Client_Http$HttpError, _jamesmacaulay$elm_graphql$GraphQL_Client_Http$GraphQLError),
+			_elm_lang$http$Http$toTask(
+				_elm_lang$http$Http$request(
+					A4(_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$requestConfig, requestOptions, documentString, expect, variableValues))));
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendQueryRaw = function (_p0) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting,
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http$rawExpect,
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultRequestOptions(_p0));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendMutationRaw = function (_p1) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting,
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http$rawExpect,
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultRequestOptions(_p1));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$customSendQueryRaw = _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting(_jamesmacaulay$elm_graphql$GraphQL_Client_Http$rawExpect);
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$customSendMutationRaw = _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting(_jamesmacaulay$elm_graphql$GraphQL_Client_Http$rawExpect);
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$send = F2(
+	function (options, request) {
+		var expect = _jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultExpect(
+			_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$responseDataDecoder(request));
+		return A3(_jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendExpecting, expect, options, request);
+	});
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendQuery = function (_p2) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Client_Http$send(
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultRequestOptions(_p2));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendMutation = function (_p3) {
+	return _jamesmacaulay$elm_graphql$GraphQL_Client_Http$send(
+		_jamesmacaulay$elm_graphql$GraphQL_Client_Http_Util$defaultRequestOptions(_p3));
+};
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$customSendQuery = _jamesmacaulay$elm_graphql$GraphQL_Client_Http$send;
+var _jamesmacaulay$elm_graphql$GraphQL_Client_Http$customSendMutation = _jamesmacaulay$elm_graphql$GraphQL_Client_Http$send;
+
 var _lukewestby$elm_http_builder$HttpBuilder$replace = F2(
 	function (old, $new) {
 		return function (_p0) {
@@ -14707,6 +16684,48 @@ var _user$project$Page_Errored$pageLoadError = F2(
 			{activePage: activePage, errorMessage: errorMessage});
 	});
 
+var _user$project$Page_Signup$signupMutation = function () {
+	var passwordVar = A3(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$required,
+		'password',
+		function (_) {
+			return _.password;
+		},
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$string);
+	var emailVar = A3(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$required,
+		'email',
+		function (_) {
+			return _.email;
+		},
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$string);
+	return _jamesmacaulay$elm_graphql$GraphQL_Request_Builder$mutationDocument(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$extract(
+			A3(
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$field,
+				'signupUser',
+				{
+					ctor: '::',
+					_0: A2(
+						_user$project$Util_ops['=>'],
+						'email',
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$variable(emailVar)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_user$project$Util_ops['=>'],
+							'password',
+							_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Arg$variable(passwordVar)),
+						_1: {ctor: '[]'}
+					}
+				},
+				_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$extract(
+					A3(
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$field,
+						'token',
+						{ctor: '[]'},
+						_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$string)))));
+}();
 var _user$project$Page_Signup$decodeLogin = A2(
 	_elm_lang$core$Json_Decode$at,
 	{
@@ -14724,6 +16743,16 @@ var _user$project$Page_Signup$Model = F3(
 		return {email: a, password: b, name: c};
 	});
 var _user$project$Page_Signup$initialModel = A3(_user$project$Page_Signup$Model, '', '', '');
+var _user$project$Page_Signup$SignupVars = F2(
+	function (a, b) {
+		return {email: a, password: b};
+	});
+var _user$project$Page_Signup$signupMutationRequest = function (model) {
+	return A2(
+		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder$request,
+		A2(_user$project$Page_Signup$SignupVars, model.email, model.password),
+		_user$project$Page_Signup$signupMutation);
+};
 var _user$project$Page_Signup$LoginResult = function (a) {
 	return {ctor: 'LoginResult', _0: a};
 };
@@ -14733,6 +16762,19 @@ var _user$project$Page_Signup$submitLogin = function (model) {
 		_elm_lang$http$Http$send,
 		_user$project$Page_Signup$LoginResult,
 		A2(_elm_lang$http$Http$get, url, _user$project$Page_Signup$decodeLogin));
+};
+var _user$project$Page_Signup$SignupResult = function (a) {
+	return {ctor: 'SignupResult', _0: a};
+};
+var _user$project$Page_Signup$submitSignup = function (model) {
+	var url = 'https://api.graph.cool/simple/v1/cjalyelhw29mq01274y61hutz';
+	return A2(
+		_elm_lang$core$Task$attempt,
+		_user$project$Page_Signup$SignupResult,
+		A2(
+			_jamesmacaulay$elm_graphql$GraphQL_Client_Http$sendMutation,
+			url,
+			_user$project$Page_Signup$signupMutationRequest(model)));
 };
 var _user$project$Page_Signup$SubmitSignup = {ctor: 'SubmitSignup'};
 var _user$project$Page_Signup$Password = function (a) {
@@ -14885,9 +16927,34 @@ var _user$project$Page_Signup$update = F2(
 					{
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _user$project$Page_Signup$submitLogin(model)
+						_1: _user$project$Page_Signup$submitSignup(model)
 					},
 					_user$project$Page_Signup$NoOp);
+			case 'SignupResult':
+				if (_p0._0.ctor === 'Ok') {
+					return A2(
+						_user$project$Util_ops['=>'],
+						A2(
+							_user$project$Util_ops['=>'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{name: _p0._0._0}),
+							_elm_lang$core$Platform_Cmd$none),
+						_user$project$Page_Signup$NoOp);
+				} else {
+					return A2(
+						_user$project$Util_ops['=>'],
+						A2(
+							_user$project$Util_ops['=>'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{
+									name: _elm_lang$core$Basics$toString(
+										A2(_elm_lang$core$Debug$log, '>>>>> err signup: ', _p0._0._0))
+								}),
+							_elm_lang$core$Platform_Cmd$none),
+						_user$project$Page_Signup$NoOp);
+				}
 			default:
 				if (_p0._0.ctor === 'Ok') {
 					return A2(
@@ -15332,7 +17399,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Page.Signup.Msg":{"args":[],"tags":{"Email":["String"],"SubmitSignup":[],"Password":["String"],"LoginResult":["Result.Result Http.Error String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Data.User.UserId":{"args":[],"tags":{"UserId":["String"]}},"Data.AuthToken.AuthToken":{"args":[],"tags":{"AuthToken":["String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Route.Route":{"args":[],"tags":{"Home":[],"Logout":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":["Data.Place.Slug"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Main.Msg":{"args":[],"tags":{"SetUser":["Maybe.Maybe Data.User.User"],"SetRoute":["Maybe.Maybe Route.Route"],"SignupMsg":["Page.Signup.Msg"],"SignupLoaded":["Result.Result Page.Errored.PageLoadError Page.Signup.Model"]}},"Page.Errored.PageLoadError":{"args":[],"tags":{"PageLoadError":["Page.Errored.Model"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Views.Page.ActivePage":{"args":[],"tags":{"Other":[],"Home":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Data.Place.Slug":{"args":[],"tags":{"Slug":["String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Page.Errored.Model":{"args":[],"type":"{ activePage : Views.Page.ActivePage, errorMessage : String }"},"Page.Signup.Model":{"args":[],"type":"{ email : String, password : String, name : String }"},"Data.User.User":{"args":[],"type":"{ id : Data.User.UserId , token : Data.AuthToken.AuthToken , email : String , name : String , bio : Maybe.Maybe String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Page.Signup.Msg":{"args":[],"tags":{"Email":["String"],"SubmitSignup":[],"SignupResult":["Result.Result GraphQL.Client.Http.Error String"],"Password":["String"],"LoginResult":["Result.Result Http.Error String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Data.User.UserId":{"args":[],"tags":{"UserId":["String"]}},"Data.AuthToken.AuthToken":{"args":[],"tags":{"AuthToken":["String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Route.Route":{"args":[],"tags":{"Home":[],"Logout":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":["Data.Place.Slug"]}},"GraphQL.Client.Http.Error":{"args":[],"tags":{"GraphQLError":["List GraphQL.Client.Http.RequestError"],"HttpError":["Http.Error"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Main.Msg":{"args":[],"tags":{"SetUser":["Maybe.Maybe Data.User.User"],"SetRoute":["Maybe.Maybe Route.Route"],"SignupMsg":["Page.Signup.Msg"],"SignupLoaded":["Result.Result Page.Errored.PageLoadError Page.Signup.Model"]}},"Page.Errored.PageLoadError":{"args":[],"tags":{"PageLoadError":["Page.Errored.Model"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Views.Page.ActivePage":{"args":[],"tags":{"Other":[],"Home":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Data.Place.Slug":{"args":[],"tags":{"Slug":["String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"GraphQL.Client.Http.DocumentLocation":{"args":[],"type":"{ line : Int, column : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Page.Errored.Model":{"args":[],"type":"{ activePage : Views.Page.ActivePage, errorMessage : String }"},"GraphQL.Client.Http.RequestError":{"args":[],"type":"{ message : String , locations : List GraphQL.Client.Http.DocumentLocation }"},"Page.Signup.Model":{"args":[],"type":"{ email : String, password : String, name : String }"},"Data.User.User":{"args":[],"type":"{ id : Data.User.UserId , token : Data.AuthToken.AuthToken , email : String , name : String , bio : Maybe.Maybe String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

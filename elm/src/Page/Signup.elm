@@ -8,6 +8,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Data.Session as Session exposing (Session)
 import Data.User as User exposing (User)
+import GraphQL.Request.Builder exposing (..)
+import GraphQL.Request.Builder.Arg as Arg
+import GraphQL.Request.Builder.Variable as Var
+import GraphQL.Client.Http as GQLHttp
+import Task
 
 
 type alias Model =
@@ -21,6 +26,7 @@ type Msg
     = Email String
     | Password String
     | SubmitSignup
+    | SignupResult (Result GQLHttp.Error String)
     | LoginResult (Result Http.Error String)
 
 
@@ -48,6 +54,47 @@ decodeLogin =
     Decode.at [ "data", "image_url" ] Decode.string
 
 
+type alias SignupVars =
+    { email : String
+    , password : String
+    }
+
+
+signupMutation : Document Mutation String SignupVars
+signupMutation =
+    let
+        emailVar =
+            Var.required "email" .email Var.string
+
+        passwordVar =
+            Var.required "password" .password Var.string
+    in
+        mutationDocument <|
+            extract
+                (field "signupUser"
+                    [ "email" => Arg.variable emailVar
+                    , "password" => Arg.variable passwordVar
+                    ]
+                    (extract (field "token" [] string))
+                )
+
+
+signupMutationRequest : Model -> Request Mutation String
+signupMutationRequest model =
+    signupMutation
+        |> request (SignupVars model.email model.password)
+
+
+submitSignup : Model -> Cmd Msg
+submitSignup model =
+    let
+        url =
+            "https://api.graph.cool/simple/v1/cjalyelhw29mq01274y61hutz"
+    in
+        GQLHttp.sendMutation url (signupMutationRequest model)
+            |> Task.attempt SignupResult
+
+
 update : Msg -> Model -> ( ( Model, Cmd Msg ), ExternalMsg )
 update msg model =
     case msg of
@@ -60,7 +107,18 @@ update msg model =
                 => NoOp
 
         SubmitSignup ->
-            ( model, submitLogin model )
+            ( model, submitSignup model )
+                => NoOp
+
+        SignupResult (Ok token) ->
+            { model | name = token }
+                => Cmd.none
+                => NoOp
+
+        SignupResult (Err err) ->
+            -- TODO get real graphql error message and show error
+            { model | name = toString (Debug.log ">>>>> err signup: " err) }
+                => Cmd.none
                 => NoOp
 
         LoginResult (Ok user) ->
