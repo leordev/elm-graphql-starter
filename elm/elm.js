@@ -16310,6 +16310,60 @@ var _user$project$Route$fromLocation = function (location) {
 	return _elm_lang$core$String$isEmpty(location.hash) ? _elm_lang$core$Maybe$Just(_user$project$Route$Signup) : A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Route$route, location);
 };
 
+var _user$project$Views_Spinner$spinnerIcon = A2(
+	_elm_lang$html$Html$span,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('sk-three-bounce'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: A2(_user$project$Util_ops['=>'], 'float', 'left'),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$Util_ops['=>'], 'margin', '0 8px'),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('sk-child sk-bounce1'),
+				_1: {ctor: '[]'}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('sk-child sk-bounce2'),
+					_1: {ctor: '[]'}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('sk-child sk-bounce3'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
 var _user$project$Views_Spinner$spinner = A2(
 	_elm_lang$html$Html$li,
 	{
@@ -16684,6 +16738,25 @@ var _user$project$Page_Errored$pageLoadError = F2(
 			{activePage: activePage, errorMessage: errorMessage});
 	});
 
+var _user$project$Page_Signup$errorView = function (error) {
+	var _p0 = error;
+	if (_p0.ctor === 'Just') {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('error'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p0._0),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return _elm_lang$html$Html$text('');
+	}
+};
 var _user$project$Page_Signup$signupMutation = function () {
 	var passwordVar = A3(
 		_jamesmacaulay$elm_graphql$GraphQL_Request_Builder_Variable$required,
@@ -16738,11 +16811,11 @@ var _user$project$Page_Signup$decodeLogin = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$string);
-var _user$project$Page_Signup$Model = F3(
-	function (a, b, c) {
-		return {email: a, password: b, name: c};
+var _user$project$Page_Signup$Model = F4(
+	function (a, b, c, d) {
+		return {email: a, password: b, error: c, loading: d};
 	});
-var _user$project$Page_Signup$initialModel = A3(_user$project$Page_Signup$Model, '', '', '');
+var _user$project$Page_Signup$initialModel = A4(_user$project$Page_Signup$Model, '', '', _elm_lang$core$Maybe$Nothing, false);
 var _user$project$Page_Signup$SignupVars = F2(
 	function (a, b) {
 		return {email: a, password: b};
@@ -16784,6 +16857,19 @@ var _user$project$Page_Signup$Email = function (a) {
 	return {ctor: 'Email', _0: a};
 };
 var _user$project$Page_Signup$view = function (model) {
+	var signupContent = model.loading ? {
+		ctor: '::',
+		_0: _user$project$Views_Spinner$spinnerIcon,
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(' Please Wait...'),
+			_1: {ctor: '[]'}
+		}
+	} : {
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Sign Up!'),
+		_1: {ctor: '[]'}
+	};
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16803,7 +16889,7 @@ var _user$project$Page_Signup$view = function (model) {
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$h2,
+						_elm_lang$html$Html$h1,
 						{ctor: '[]'},
 						{
 							ctor: '::',
@@ -16857,31 +16943,20 @@ var _user$project$Page_Signup$view = function (model) {
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$input,
+									_elm_lang$html$Html$button,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('submit'),
+										_0: _elm_lang$html$Html_Attributes$disabled(model.loading),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value('Sign Up!'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(_user$project$Page_Signup$SubmitSignup),
-												_1: {ctor: '[]'}
-											}
+											_0: _elm_lang$html$Html_Events$onClick(_user$project$Page_Signup$SubmitSignup),
+											_1: {ctor: '[]'}
 										}
 									},
-									{ctor: '[]'}),
+									signupContent),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$img,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(model.name),
-											_1: {ctor: '[]'}
-										},
-										{ctor: '[]'}),
+									_0: _user$project$Page_Signup$errorView(model.error),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -16897,8 +16972,8 @@ var _user$project$Page_Signup$SetUser = function (a) {
 var _user$project$Page_Signup$NoOp = {ctor: 'NoOp'};
 var _user$project$Page_Signup$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'Email':
 				return A2(
 					_user$project$Util_ops['=>'],
@@ -16906,7 +16981,7 @@ var _user$project$Page_Signup$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{email: _p0._0}),
+							{email: _p1._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					},
 					_user$project$Page_Signup$NoOp);
@@ -16917,31 +16992,22 @@ var _user$project$Page_Signup$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{password: _p0._0}),
+							{password: _p1._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					},
 					_user$project$Page_Signup$NoOp);
 			case 'SubmitSignup':
 				return A2(
 					_user$project$Util_ops['=>'],
-					{
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _user$project$Page_Signup$submitSignup(model)
-					},
+					A2(
+						_user$project$Util_ops['=>'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{error: _elm_lang$core$Maybe$Nothing, loading: true}),
+						_user$project$Page_Signup$submitSignup(model)),
 					_user$project$Page_Signup$NoOp);
 			case 'SignupResult':
-				if (_p0._0.ctor === 'Ok') {
-					return A2(
-						_user$project$Util_ops['=>'],
-						A2(
-							_user$project$Util_ops['=>'],
-							_elm_lang$core$Native_Utils.update(
-								model,
-								{name: _p0._0._0}),
-							_elm_lang$core$Platform_Cmd$none),
-						_user$project$Page_Signup$NoOp);
-				} else {
+				if (_p1._0.ctor === 'Ok') {
 					return A2(
 						_user$project$Util_ops['=>'],
 						A2(
@@ -16949,21 +17015,49 @@ var _user$project$Page_Signup$update = F2(
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
-									name: _elm_lang$core$Basics$toString(
-										A2(_elm_lang$core$Debug$log, '>>>>> err signup: ', _p0._0._0))
+									error: _elm_lang$core$Maybe$Just(_p1._0._0),
+									loading: false
+								}),
+							_elm_lang$core$Platform_Cmd$none),
+						_user$project$Page_Signup$NoOp);
+				} else {
+					var errorMessage = function () {
+						var _p2 = _p1._0._0;
+						if (_p2.ctor === 'GraphQLError') {
+							var _p3 = _elm_lang$core$List$head(_p2._0);
+							if (_p3.ctor === 'Just') {
+								return _p3._0.message;
+							} else {
+								return 'Error while Signing Up';
+							}
+						} else {
+							return _elm_lang$core$Basics$toString(_p2._0);
+						}
+					}();
+					return A2(
+						_user$project$Util_ops['=>'],
+						A2(
+							_user$project$Util_ops['=>'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{
+									loading: false,
+									error: _elm_lang$core$Maybe$Just(errorMessage)
 								}),
 							_elm_lang$core$Platform_Cmd$none),
 						_user$project$Page_Signup$NoOp);
 				}
 			default:
-				if (_p0._0.ctor === 'Ok') {
+				if (_p1._0.ctor === 'Ok') {
 					return A2(
 						_user$project$Util_ops['=>'],
 						{
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
-								{name: _p0._0._0}),
+								{
+									error: _elm_lang$core$Maybe$Just(_p1._0._0)
+								}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						},
 						_user$project$Page_Signup$NoOp);
@@ -16975,7 +17069,8 @@ var _user$project$Page_Signup$update = F2(
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									name: _elm_lang$core$Basics$toString(_p0._0._0)
+									error: _elm_lang$core$Maybe$Just(
+										_elm_lang$core$Basics$toString(_p1._0._0))
 								}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						},
@@ -17399,7 +17494,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Page.Signup.Msg":{"args":[],"tags":{"Email":["String"],"SubmitSignup":[],"SignupResult":["Result.Result GraphQL.Client.Http.Error String"],"Password":["String"],"LoginResult":["Result.Result Http.Error String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Data.User.UserId":{"args":[],"tags":{"UserId":["String"]}},"Data.AuthToken.AuthToken":{"args":[],"tags":{"AuthToken":["String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Route.Route":{"args":[],"tags":{"Home":[],"Logout":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":["Data.Place.Slug"]}},"GraphQL.Client.Http.Error":{"args":[],"tags":{"GraphQLError":["List GraphQL.Client.Http.RequestError"],"HttpError":["Http.Error"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Main.Msg":{"args":[],"tags":{"SetUser":["Maybe.Maybe Data.User.User"],"SetRoute":["Maybe.Maybe Route.Route"],"SignupMsg":["Page.Signup.Msg"],"SignupLoaded":["Result.Result Page.Errored.PageLoadError Page.Signup.Model"]}},"Page.Errored.PageLoadError":{"args":[],"tags":{"PageLoadError":["Page.Errored.Model"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Views.Page.ActivePage":{"args":[],"tags":{"Other":[],"Home":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Data.Place.Slug":{"args":[],"tags":{"Slug":["String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"GraphQL.Client.Http.DocumentLocation":{"args":[],"type":"{ line : Int, column : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Page.Errored.Model":{"args":[],"type":"{ activePage : Views.Page.ActivePage, errorMessage : String }"},"GraphQL.Client.Http.RequestError":{"args":[],"type":"{ message : String , locations : List GraphQL.Client.Http.DocumentLocation }"},"Page.Signup.Model":{"args":[],"type":"{ email : String, password : String, name : String }"},"Data.User.User":{"args":[],"type":"{ id : Data.User.UserId , token : Data.AuthToken.AuthToken , email : String , name : String , bio : Maybe.Maybe String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Page.Signup.Msg":{"args":[],"tags":{"Email":["String"],"SubmitSignup":[],"SignupResult":["Result.Result GraphQL.Client.Http.Error String"],"Password":["String"],"LoginResult":["Result.Result Http.Error String"]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Data.User.UserId":{"args":[],"tags":{"UserId":["String"]}},"Data.AuthToken.AuthToken":{"args":[],"tags":{"AuthToken":["String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Route.Route":{"args":[],"tags":{"Home":[],"Logout":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":["Data.Place.Slug"]}},"GraphQL.Client.Http.Error":{"args":[],"tags":{"GraphQLError":["List GraphQL.Client.Http.RequestError"],"HttpError":["Http.Error"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Main.Msg":{"args":[],"tags":{"SetUser":["Maybe.Maybe Data.User.User"],"SetRoute":["Maybe.Maybe Route.Route"],"SignupMsg":["Page.Signup.Msg"],"SignupLoaded":["Result.Result Page.Errored.PageLoadError Page.Signup.Model"]}},"Page.Errored.PageLoadError":{"args":[],"tags":{"PageLoadError":["Page.Errored.Model"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Views.Page.ActivePage":{"args":[],"tags":{"Other":[],"Home":[],"Profile":["Data.User.UserId"],"Signup":[],"Place":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Data.Place.Slug":{"args":[],"tags":{"Slug":["String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"GraphQL.Client.Http.DocumentLocation":{"args":[],"type":"{ line : Int, column : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Page.Errored.Model":{"args":[],"type":"{ activePage : Views.Page.ActivePage, errorMessage : String }"},"GraphQL.Client.Http.RequestError":{"args":[],"type":"{ message : String , locations : List GraphQL.Client.Http.DocumentLocation }"},"Page.Signup.Model":{"args":[],"type":"{ email : String , password : String , error : Maybe.Maybe String , loading : Bool }"},"Data.User.User":{"args":[],"type":"{ id : Data.User.UserId , token : Data.AuthToken.AuthToken , email : String , name : String , bio : Maybe.Maybe String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

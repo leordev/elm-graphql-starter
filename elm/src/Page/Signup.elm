@@ -1,5 +1,6 @@
 module Page.Signup exposing (Model, ExternalMsg(..), Msg, initialModel, update, view)
 
+import Views.Spinner exposing (spinnerIcon)
 import Util exposing ((=>))
 import Http
 import Json.Decode as Decode
@@ -18,7 +19,8 @@ import Task
 type alias Model =
     { email : String
     , password : String
-    , name : String
+    , error : Maybe String
+    , loading : Bool
     }
 
 
@@ -37,7 +39,7 @@ type ExternalMsg
 
 initialModel : Model
 initialModel =
-    Model "" "" ""
+    Model "" "" Nothing False
 
 
 submitLogin : Model -> Cmd Msg
@@ -107,38 +109,75 @@ update msg model =
                 => NoOp
 
         SubmitSignup ->
-            ( model, submitSignup model )
+            { model | error = Nothing, loading = True }
+                => submitSignup model
                 => NoOp
 
         SignupResult (Ok token) ->
-            { model | name = token }
+            { model | error = Just token, loading = False }
                 => Cmd.none
                 => NoOp
 
         SignupResult (Err err) ->
-            -- TODO get real graphql error message and show error
-            { model | name = toString (Debug.log ">>>>> err signup: " err) }
-                => Cmd.none
-                => NoOp
+            let
+                errorMessage =
+                    case err of
+                        GQLHttp.GraphQLError gqlErr ->
+                            case (List.head gqlErr) of
+                                Just gqlErrMsg ->
+                                    gqlErrMsg.message
+
+                                Nothing ->
+                                    "Error while Signing Up"
+
+                        GQLHttp.HttpError httpErr ->
+                            toString httpErr
+            in
+                { model | loading = False, error = Just errorMessage }
+                    => Cmd.none
+                    => NoOp
 
         LoginResult (Ok user) ->
-            ( { model | name = user }, Cmd.none )
+            ( { model | error = Just user }, Cmd.none )
                 => NoOp
 
         LoginResult (Err err) ->
-            ( { model | name = toString err }, Cmd.none )
+            ( { model | error = Just (toString err) }, Cmd.none )
                 => NoOp
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "login-page" ]
-        [ div
-            [ class "login-container" ]
-            [ h2 [] [ text "Login Form" ]
-            , input [ type_ "email", onInput Email, value model.email, placeholder "E-mail" ] []
-            , input [ type_ "password", onInput Password, value model.password, placeholder "Password" ] []
-            , input [ type_ "submit", value "Sign Up!", onClick SubmitSignup ] []
-            , img [ src model.name ] []
+    let
+        signupContent =
+            if model.loading then
+                [ spinnerIcon
+                , text " Please Wait..."
+                ]
+            else
+                [ text "Sign Up!" ]
+    in
+        div [ class "login-page" ]
+            [ div
+                [ class "login-container" ]
+                [ h1 [] [ text "Login Form" ]
+                , input [ type_ "email", onInput Email, value model.email, placeholder "E-mail" ] []
+                , input [ type_ "password", onInput Password, value model.password, placeholder "Password" ] []
+                , button
+                    [ disabled model.loading
+                    , onClick SubmitSignup
+                    ]
+                    signupContent
+                , errorView model.error
+                ]
             ]
-        ]
+
+
+errorView : Maybe String -> Html msg
+errorView error =
+    case error of
+        Just err ->
+            div [ class "error" ] [ text err ]
+
+        Nothing ->
+            text ""
