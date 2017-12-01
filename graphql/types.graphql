@@ -6,6 +6,7 @@ type User @model {
   name: String
   email: String! @isUnique
   password: String!
+  bio: String
 
   createdAt: DateTime!
   updatedAt: DateTime!

@@ -1,8 +1,11 @@
-module Data.User exposing (User, userIdToString, UserId, decoder)
+module Data.User exposing (User, userIdToString, UserId(..), decoder, encode)
 
 import Data.AuthToken as AuthToken exposing (AuthToken)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
+import Json.Encode as Encode exposing (Value)
+import Json.Encode.Extra as EncodeExtra
+import Util exposing ((=>))
 
 
 type UserId
@@ -35,3 +38,14 @@ decoder =
         |> required "email" Decode.string
         |> required "name" Decode.string
         |> required "bio" (Decode.nullable Decode.string)
+
+
+encode : User -> Value
+encode user =
+    Encode.object
+        [ "email" => Encode.string user.email
+        , "token" => AuthToken.encode user.token
+        , "id" => Encode.string (userIdToString user.id)
+        , "name" => Encode.string user.name
+        , "bio" => EncodeExtra.maybe Encode.string user.bio
+        ]

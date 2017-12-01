@@ -8,12 +8,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Data.Session as Session exposing (Session)
-import Data.User as User exposing (User)
-import GraphQL.Request.Builder exposing (..)
-import GraphQL.Request.Builder.Arg as Arg
-import GraphQL.Request.Builder.Variable as Var
-import GraphQL.Client.Http as GQLHttp
+import Data.User as User exposing (User, UserId(..))
+import Route exposing (Route)
 import Task
+import Request.User exposing (storeSession)
+import Data.AuthToken exposing (SignupPayload)
+import GraphQL.Client.Http as GQLHttp
 
 
 type alias Model =
@@ -28,8 +28,9 @@ type Msg
     = Email String
     | Password String
     | SubmitSignup
-    | SignupResult (Result GQLHttp.Error String)
     | LoginResult (Result Http.Error String)
+    | SignupResponse (Result GQLHttp.Error SignupPayload)
+    | UserResponse (Result GQLHttp.Error User)
 
 
 type ExternalMsg
@@ -56,47 +57,6 @@ decodeLogin =
     Decode.at [ "data", "image_url" ] Decode.string
 
 
-type alias SignupVars =
-    { email : String
-    , password : String
-    }
-
-
-signupMutation : Document Mutation String SignupVars
-signupMutation =
-    let
-        emailVar =
-            Var.required "email" .email Var.string
-
-        passwordVar =
-            Var.required "password" .password Var.string
-    in
-        mutationDocument <|
-            extract
-                (field "signupUser"
-                    [ "email" => Arg.variable emailVar
-                    , "password" => Arg.variable passwordVar
-                    ]
-                    (extract (field "token" [] string))
-                )
-
-
-signupMutationRequest : Model -> Request Mutation String
-signupMutationRequest model =
-    signupMutation
-        |> request (SignupVars model.email model.password)
-
-
-submitSignup : Model -> Cmd Msg
-submitSignup model =
-    let
-        url =
-            "https://api.graph.cool/simple/v1/cjalyelhw29mq01274y61hutz"
-    in
-        GQLHttp.sendMutation url (signupMutationRequest model)
-            |> Task.attempt SignupResult
-
-
 update : Msg -> Model -> ( ( Model, Cmd Msg ), ExternalMsg )
 update msg model =
     case msg of
@@ -110,15 +70,39 @@ update msg model =
 
         SubmitSignup ->
             { model | error = Nothing, loading = True }
-                => submitSignup model
+                => Task.attempt SignupResponse (Request.User.signup model)
                 => NoOp
 
-        SignupResult (Ok token) ->
-            { model | error = Just token, loading = False }
-                => Cmd.none
+        SignupResponse (Ok data) ->
+            model
+                => Task.attempt UserResponse (Request.User.get (UserId data.id))
                 => NoOp
 
-        SignupResult (Err err) ->
+        SignupResponse (Err err) ->
+            let
+                errorMessage =
+                    case err of
+                        GQLHttp.GraphQLError gqlErr ->
+                            case (List.head gqlErr) of
+                                Just gqlErrMsg ->
+                                    gqlErrMsg.message
+
+                                Nothing ->
+                                    "Error while Signing Up"
+
+                        GQLHttp.HttpError httpErr ->
+                            toString httpErr
+            in
+                { model | loading = False, error = Just errorMessage }
+                    => Cmd.none
+                    => NoOp
+
+        UserResponse (Ok user) ->
+            { model | error = Nothing, loading = False }
+                => Cmd.batch [ storeSession user, Route.modifyUrl Route.Home ]
+                => SetUser user
+
+        UserResponse (Err err) ->
             let
                 errorMessage =
                     case err of

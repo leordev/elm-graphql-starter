@@ -1,4 +1,4 @@
-module Data.AuthToken exposing (AuthToken, decoder, encode, withAuthorization)
+module Data.AuthToken exposing (AuthToken(..), decoder, encode, withAuthorization, SignupPayload)
 
 import HttpBuilder exposing (RequestBuilder, withHeader)
 import Json.Decode as Decode exposing (Decoder)
@@ -7,6 +7,12 @@ import Json.Encode as Encode exposing (Value)
 
 type AuthToken
     = AuthToken String
+
+
+type alias SignupPayload =
+    { id : String
+    , token : String
+    }
 
 
 encode : AuthToken -> Value
