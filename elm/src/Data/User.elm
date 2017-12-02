@@ -1,6 +1,5 @@
 module Data.User exposing (User, userIdToString, UserId(..), decoder, encode)
 
-import Data.AuthToken as AuthToken exposing (AuthToken)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
@@ -14,7 +13,6 @@ type UserId
 
 type alias User =
     { id : UserId
-    , token : AuthToken
     , email : String
     , name : String
     , bio : Maybe String
@@ -34,7 +32,6 @@ decoder : Decoder User
 decoder =
     decode User
         |> required "id" (Decode.map UserId Decode.string)
-        |> required "token" AuthToken.decoder
         |> required "email" Decode.string
         |> required "name" Decode.string
         |> required "bio" (Decode.nullable Decode.string)
@@ -44,7 +41,6 @@ encode : User -> Value
 encode user =
     Encode.object
         [ "email" => Encode.string user.email
-        , "token" => AuthToken.encode user.token
         , "id" => Encode.string (userIdToString user.id)
         , "name" => Encode.string user.name
         , "bio" => EncodeExtra.maybe Encode.string user.bio

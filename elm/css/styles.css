@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html, body
 {
     width: 100%;
@@ -6,7 +10,7 @@ html, body
     margin: 0;
     padding: 0;
 
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-weight: 400;
 }
@@ -26,6 +30,15 @@ h2 {
 
 h3 {
     font-size: 18px;
+}
+
+a {
+    text-decoration: none;
+    color: #7b1fa2;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 input, button {
@@ -75,6 +88,36 @@ button .sk-three-bounce .sk-child {
 .login-container h1 {
     color: #7b1fa2;
 }
+
+.login-footer {
+    margin: 20px;
+    text-align: center;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 80px;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.navbar-brand {
+    font-family: 'Righteous', serif;
+    font-size: 40px;
+}
+
+.navbar ul {
+        padding-left: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.navbar li {
+    float: left;
+    margin-left: 1rem;
+} 
 
 .error {
     color: red;

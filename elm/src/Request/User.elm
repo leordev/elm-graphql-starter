@@ -7,11 +7,11 @@ import GraphQL.Client.Http as GQLHttp
 import Util exposing ((=>))
 import Request.Helpers exposing (apiUrl)
 import Task exposing (Task)
-import Data.User exposing (User, UserId(..), userIdToString, encode)
+import Data.User exposing (User, UserId(..), userIdToString)
 import Ports
 import Json.Encode as Encode
 import Json.Encode.Extra as EncodeExtra
-import Data.AuthToken as AuthToken exposing (AuthToken(..))
+import Data.AuthToken as AuthToken exposing (AuthTokenStr(..))
 
 
 type alias SignupVars =
@@ -20,9 +20,9 @@ type alias SignupVars =
     }
 
 
-storeSession : User -> Cmd msg
-storeSession user =
-    encode user
+storeSession : AuthToken.SignupPayload -> Cmd msg
+storeSession data =
+    AuthToken.encodeSignupPayload data
         |> Encode.encode 0
         |> Just
         |> Ports.storeSession
@@ -37,7 +37,6 @@ userQuery =
         user =
             object User
                 |> with (field "id" [] (map UserId id))
-                |> withLocalConstant (AuthToken "zzz")
                 |> with (field "email" [] string)
                 |> with (field "name" [] string)
                 |> with (field "bio" [] (nullable string))
@@ -62,9 +61,15 @@ get userId =
         GQLHttp.sendQuery apiUrl req
 
 
-signupMutation : Document Mutation AuthToken.SignupPayload SignupVars
-signupMutation =
+signupMutation : Bool -> Document Mutation AuthToken.SignupPayload SignupVars
+signupMutation signupMode =
     let
+        mutationName =
+            if signupMode then
+                "signupUser"
+            else
+                "authenticateUser"
+
         emailVar =
             Var.required "email" .email Var.string
 
@@ -73,23 +78,23 @@ signupMutation =
     in
         mutationDocument <|
             extract
-                (field "signupUser"
+                (field mutationName
                     [ "email" => Arg.variable emailVar
                     , "password" => Arg.variable passwordVar
                     ]
                     (object AuthToken.SignupPayload
                         |> with (field "id" [] string)
-                        |> with (field "token" [] string)
+                        |> with (field "token" [] (map AuthTokenStr string))
                     )
                 )
 
 
-signupMutationRequest : { m | email : String, password : String } -> Request Mutation AuthToken.SignupPayload
-signupMutationRequest model =
-    signupMutation
+signupMutationRequest : Bool -> { m | email : String, password : String } -> Request Mutation AuthToken.SignupPayload
+signupMutationRequest signupMode model =
+    signupMutation signupMode
         |> request (SignupVars model.email model.password)
 
 
-signup : { m | email : String, password : String } -> Task GQLHttp.Error AuthToken.SignupPayload
-signup model =
-    GQLHttp.sendMutation apiUrl (signupMutationRequest model)
+signup : Bool -> { m | email : String, password : String } -> Task GQLHttp.Error AuthToken.SignupPayload
+signup signupMode model =
+    GQLHttp.sendMutation apiUrl (signupMutationRequest signupMode model)

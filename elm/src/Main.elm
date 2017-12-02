@@ -11,6 +11,7 @@ import Page.NotFound as NotFound
 import Views.Page as Page exposing (ActivePage)
 import Data.Session as Session exposing (Session)
 import Data.User as User exposing (User, UserId)
+import Data.AuthToken as AuthToken exposing (SignupPayload)
 import Ports
 
 
@@ -51,7 +52,7 @@ init : Value -> Location -> ( Model, Cmd Msg )
 init val location =
     setRoute (Route.fromLocation location)
         { pageState = Loaded initialPage
-        , session = { user = decodeUserFromJson val }
+        , session = { user = Nothing, auth = decodeAuthFromJson val }
         }
 
 
@@ -68,6 +69,14 @@ decodeUserFromJson json =
         |> Maybe.andThen (Decode.decodeString User.decoder >> Result.toMaybe)
 
 
+decodeAuthFromJson : Value -> Maybe SignupPayload
+decodeAuthFromJson json =
+    json
+        |> Decode.decodeValue Decode.string
+        |> Result.toMaybe
+        |> Maybe.andThen (Decode.decodeString AuthToken.decoder >> Result.toMaybe)
+
+
 
 -- UPDATE
 
@@ -75,7 +84,7 @@ decodeUserFromJson json =
 type Msg
     = SetRoute (Maybe Route)
     | SignupLoaded (Result PageLoadError Signup.Model)
-    | SetUser (Maybe User)
+    | SetUser (Maybe SignupPayload)
     | SignupMsg Signup.Msg
 
 
@@ -96,8 +105,8 @@ setRoute maybeRoute model =
                 ( { model | pageState = Loaded (Signup Signup.initialModel) }, Cmd.none )
 
             Just Route.Home ->
-                case model.session.user of
-                    Just user ->
+                case model.session.auth of
+                    Just auth ->
                         ( { model | pageState = Loaded Home }, Cmd.none )
 
                     Nothing ->
@@ -108,7 +117,7 @@ setRoute maybeRoute model =
                     session =
                         model.session
                 in
-                    ( { model | session = { session | user = Nothing } }
+                    ( { model | session = { session | user = Nothing, auth = Nothing } }
                     , Cmd.batch
                         [ Ports.storeSession Nothing
                         , Route.modifyUrl Route.Signup
@@ -179,12 +188,15 @@ updatePage page msg model =
                             Signup.NoOp ->
                                 model
 
-                            Signup.SetUser user ->
+                            Signup.SetUser auth ->
                                 let
                                     session =
                                         model.session
+
+                                    newSession =
+                                        { session | auth = Just auth }
                                 in
-                                    { model | session = { user = Just user } }
+                                    { model | session = newSession }
                 in
                     { newModel | pageState = Loaded (Signup signupModel) }
                         => Cmd.map SignupMsg cmd
@@ -208,9 +220,9 @@ subscriptions model =
         ]
 
 
-sessionChange : Sub (Maybe User)
+sessionChange : Sub (Maybe SignupPayload)
 sessionChange =
-    Ports.onSessionChange (Decode.decodeValue User.decoder >> Result.toMaybe)
+    Ports.onSessionChange (Decode.decodeValue AuthToken.decoder >> Result.toMaybe)
 
 
 pageSubscriptions : Page -> Sub Msg

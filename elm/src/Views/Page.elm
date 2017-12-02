@@ -34,14 +34,13 @@ rawFrame content =
 viewHeader : ActivePage -> Maybe User -> Bool -> Html msg
 viewHeader page user isLoading =
     nav [ class "navbar navbar-light" ]
-        [ div [ class "container" ]
-            [ a [ class "navbar-brand", Route.href Route.Home ]
-                [ text "starter" ]
-            , ul [ class "nav navbar-nav pull-xs-right" ] <|
-                lazy2 Util.viewIf isLoading spinner
-                    :: navbarLink page Route.Home [ text "Home" ]
-                    :: [ text "" ]
-            ]
+        [ a [ class "navbar-brand", Route.href Route.Home ]
+            [ text "starter" ]
+        , ul [] <|
+            lazy2 Util.viewIf isLoading spinner
+                :: navbarLink page Route.Home [ text "Home" ]
+                :: navbarLink page Route.Logout [ text "Sign Out" ]
+                :: [ text "" ]
         ]
 
 

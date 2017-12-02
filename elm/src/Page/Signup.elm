@@ -21,12 +21,14 @@ type alias Model =
     , password : String
     , error : Maybe String
     , loading : Bool
+    , signupMode : Bool
     }
 
 
 type Msg
     = Email String
     | Password String
+    | SignupMode
     | SubmitSignup
     | LoginResult (Result Http.Error String)
     | SignupResponse (Result GQLHttp.Error SignupPayload)
@@ -35,12 +37,12 @@ type Msg
 
 type ExternalMsg
     = NoOp
-    | SetUser User
+    | SetUser SignupPayload
 
 
 initialModel : Model
 initialModel =
-    Model "" "" Nothing False
+    Model "" "" Nothing False True
 
 
 submitLogin : Model -> Cmd Msg
@@ -68,15 +70,20 @@ update msg model =
             ( { model | password = newPassword }, Cmd.none )
                 => NoOp
 
+        SignupMode ->
+            ( { model | signupMode = not model.signupMode }, Cmd.none )
+                => NoOp
+
         SubmitSignup ->
             { model | error = Nothing, loading = True }
-                => Task.attempt SignupResponse (Request.User.signup model)
+                => Task.attempt SignupResponse (Request.User.signup model.signupMode model)
                 => NoOp
 
         SignupResponse (Ok data) ->
             model
-                => Task.attempt UserResponse (Request.User.get (UserId data.id))
-                => NoOp
+                --=> Task.attempt UserResponse (Request.User.get (UserId data.id))
+                => Cmd.batch [ storeSession data, Route.modifyUrl Route.Home ]
+                => SetUser data
 
         SignupResponse (Err err) ->
             let
@@ -99,9 +106,11 @@ update msg model =
 
         UserResponse (Ok user) ->
             { model | error = Nothing, loading = False }
-                => Cmd.batch [ storeSession user, Route.modifyUrl Route.Home ]
-                => SetUser user
+                => Cmd.none
+                --Cmd.batch [ storeSession user, Route.modifyUrl Route.Home ]
+                => NoOp
 
+        -- SetUser user
         UserResponse (Err err) ->
             let
                 errorMessage =
@@ -138,8 +147,10 @@ view model =
                 [ spinnerIcon
                 , text " Please Wait..."
                 ]
-            else
+            else if model.signupMode then
                 [ text "Sign Up!" ]
+            else
+                [ text "Login" ]
     in
         div [ class "login-page" ]
             [ div
@@ -153,7 +164,23 @@ view model =
                     ]
                     signupContent
                 , errorView model.error
+                , modeLinkView model.signupMode
                 ]
+            ]
+
+
+modeLinkView : Bool -> Html Msg
+modeLinkView signupMode =
+    let
+        modeText =
+            if signupMode then
+                "Already have an Account? Sign In"
+            else
+                "Back to Sign Up"
+    in
+        div [ class "login-footer" ]
+            [ a [ href "javascript:;", onClick SignupMode ]
+                [ text modeText ]
             ]
 
 

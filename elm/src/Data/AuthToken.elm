@@ -1,35 +1,51 @@
-module Data.AuthToken exposing (AuthToken(..), decoder, encode, withAuthorization, SignupPayload)
+module Data.AuthToken exposing (AuthTokenStr(..), decoder, encode, withAuthorization, SignupPayload, encodeSignupPayload)
 
 import HttpBuilder exposing (RequestBuilder, withHeader)
 import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
+import Util exposing ((=>))
 
 
-type AuthToken
-    = AuthToken String
+type AuthTokenStr
+    = AuthTokenStr String
 
 
 type alias SignupPayload =
     { id : String
-    , token : String
+    , token : AuthTokenStr
     }
 
 
-encode : AuthToken -> Value
-encode (AuthToken token) =
+encode : AuthTokenStr -> Value
+encode (AuthTokenStr token) =
     Encode.string token
 
 
-decoder : Decoder AuthToken
+authTokenToString : AuthTokenStr -> String
+authTokenToString (AuthTokenStr token) =
+    token
+
+
+encodeSignupPayload : SignupPayload -> Value
+encodeSignupPayload { id, token } =
+    Encode.object
+        [ "id" => Encode.string id
+        , "token" => Encode.string (authTokenToString token)
+        ]
+
+
+decoder : Decoder SignupPayload
 decoder =
-    Decode.string
-        |> Decode.map AuthToken
+    decode SignupPayload
+        |> required "id" Decode.string
+        |> required "token" (Decode.map AuthTokenStr Decode.string)
 
 
-withAuthorization : Maybe AuthToken -> RequestBuilder a -> RequestBuilder a
+withAuthorization : Maybe AuthTokenStr -> RequestBuilder a -> RequestBuilder a
 withAuthorization maybeToken builder =
     case maybeToken of
-        Just (AuthToken token) ->
+        Just (AuthTokenStr token) ->
             builder
                 |> withHeader "authorization" ("Bearer " ++ token)
 
