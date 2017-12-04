@@ -2,12 +2,10 @@ module Page.Signup exposing (Model, ExternalMsg(..), Msg, initialModel, update, 
 
 import Views.Spinner exposing (spinnerIcon)
 import Util exposing ((=>))
-import Http
 import Json.Decode as Decode
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Data.Session as Session exposing (Session)
 import Data.User as User exposing (User, UserId(..))
 import Route exposing (Route)
 import Task
@@ -30,7 +28,6 @@ type Msg
     | Password String
     | SignupMode
     | SubmitSignup
-    | LoginResult (Result Http.Error String)
     | SignupResponse (Result GQLHttp.Error SignupPayload)
     | UserResponse (Result GQLHttp.Error User)
 
@@ -43,15 +40,6 @@ type ExternalMsg
 initialModel : Model
 initialModel =
     Model "" "" Nothing False True
-
-
-submitLogin : Model -> Cmd Msg
-submitLogin model =
-    let
-        url =
-            "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" ++ model.email
-    in
-        Http.send LoginResult (Http.get url decodeLogin)
 
 
 decodeLogin : Decode.Decoder String
@@ -81,7 +69,6 @@ update msg model =
 
         SignupResponse (Ok data) ->
             model
-                --=> Task.attempt UserResponse (Request.User.get (UserId data.id))
                 => Cmd.batch [ storeSession data, Route.modifyUrl Route.Home ]
                 => SetUser data
 
@@ -129,14 +116,6 @@ update msg model =
                 { model | loading = False, error = Just errorMessage }
                     => Cmd.none
                     => NoOp
-
-        LoginResult (Ok user) ->
-            ( { model | error = Just user }, Cmd.none )
-                => NoOp
-
-        LoginResult (Err err) ->
-            ( { model | error = Just (toString err) }, Cmd.none )
-                => NoOp
 
 
 view : Model -> Html Msg

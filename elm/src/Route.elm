@@ -4,7 +4,6 @@ import Html exposing (Attribute)
 import Html.Attributes as Attr
 import Navigation exposing (Location)
 import UrlParser as Url exposing ((</>), Parser, oneOf, parseHash, s, string)
-import Data.Place as Place
 import Data.User as User
 
 
@@ -13,7 +12,6 @@ type Route
     | Logout
     | Signup
     | Profile User.UserId
-    | Place Place.Slug
 
 
 route : Parser (Route -> a) a
@@ -22,7 +20,6 @@ route =
         [ Url.map Home (s "home")
         , Url.map Logout (s "logout")
         , Url.map Signup (s "")
-        , Url.map Place (s "place" </> Place.slugParser)
         ]
 
 
@@ -43,9 +40,6 @@ routeToString page =
 
                 Signup ->
                     []
-
-                Place slug ->
-                    [ "place", Place.slugToString slug ]
 
                 Profile id ->
                     [ "profile", User.userIdToString id ]

@@ -18,6 +18,7 @@ html, body
 h1, h2, h3, h4, h5 {
     font-weight: 400;
     font-family: 'Rubik', sans-serif;
+    margin: 0 0 14px;
 }
 
 h1 {
@@ -119,7 +120,40 @@ button .sk-three-bounce .sk-child {
     margin-left: 1rem;
 } 
 
+.navbar .sk-three-bounce {
+    margin: 0 15px;
+}
+
 .error {
     color: red;
     padding: 8px;
+}
+
+.page-frame {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container {
+    flex: 1;
+    padding: 14px;
+}
+
+footer {
+    background-color: #eee;
+    text-align: center;
+    font-size: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer .logo-font {
+    font-family: 'Righteous', serif;
+    font-size: 20px;
+    margin-right: 20px;
 }

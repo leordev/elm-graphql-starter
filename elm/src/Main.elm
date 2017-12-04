@@ -7,12 +7,16 @@ import Html exposing (..)
 import Route exposing (Route)
 import Page.Errored as Errored exposing (PageLoadError)
 import Page.Signup as Signup exposing (Model)
+import Page.Home as Home
 import Page.NotFound as NotFound
 import Views.Page as Page exposing (ActivePage)
 import Data.Session as Session exposing (Session)
 import Data.User as User exposing (User, UserId)
 import Data.AuthToken as AuthToken exposing (SignupPayload)
 import Ports
+import Request.User
+import Task
+import GraphQL.Client.Http as GQLHttp
 
 
 main : Program Value Model Msg
@@ -45,6 +49,7 @@ type PageState
 type alias Model =
     { session : Session
     , pageState : PageState
+    , isLoading : Bool
     }
 
 
@@ -52,6 +57,7 @@ init : Value -> Location -> ( Model, Cmd Msg )
 init val location =
     setRoute (Route.fromLocation location)
         { pageState = Loaded initialPage
+        , isLoading = False
         , session = { user = Nothing, auth = decodeAuthFromJson val }
         }
 
@@ -86,6 +92,7 @@ type Msg
     | SignupLoaded (Result PageLoadError Signup.Model)
     | SetUser (Maybe SignupPayload)
     | SignupMsg Signup.Msg
+    | LoadUser (Result GQLHttp.Error User)
 
 
 setRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -94,41 +101,56 @@ setRoute maybeRoute model =
         errored =
             pageErrored model
 
-        log =
+        logModel =
+            Debug.log ">>>>> current model :" model
+
+        logRoute =
             Debug.log ">>>>> setRoute : route" maybeRoute
     in
-        case maybeRoute of
+        case model.session.auth of
             Nothing ->
-                ( { model | pageState = Loaded NotFound }, Cmd.none )
+                case maybeRoute of
+                    Just Route.Signup ->
+                        ( { model | pageState = Loaded (Signup Signup.initialModel) }, Cmd.none )
 
-            Just Route.Signup ->
-                ( { model | pageState = Loaded (Signup Signup.initialModel) }, Cmd.none )
-
-            Just Route.Home ->
-                case model.session.auth of
-                    Just auth ->
-                        ( { model | pageState = Loaded Home }, Cmd.none )
-
-                    Nothing ->
+                    _ ->
                         errored Page.Home "You must be signed in to view content."
 
-            Just Route.Logout ->
+            Just auth ->
                 let
-                    session =
-                        model.session
+                    userCmd =
+                        case model.session.user of
+                            Nothing ->
+                                Task.attempt LoadUser (Request.User.get (User.UserId auth.id))
+
+                            _ ->
+                                Cmd.none
                 in
-                    ( { model | session = { session | user = Nothing, auth = Nothing } }
-                    , Cmd.batch
-                        [ Ports.storeSession Nothing
-                        , Route.modifyUrl Route.Signup
-                        ]
-                    )
+                    case maybeRoute of
+                        Nothing ->
+                            { model | pageState = Loaded NotFound } => userCmd
 
-            Just (Route.Profile id) ->
-                ( { model | pageState = Loaded NotFound }, Cmd.none )
+                        Just Route.Signup ->
+                            -- User does not need to open signup form, redirect to home
+                            ( model, Route.modifyUrl Route.Home )
 
-            Just (Route.Place slug) ->
-                ( { model | pageState = Loaded NotFound }, Cmd.none )
+                        Just Route.Home ->
+                            ( { model | pageState = Loaded Home }, userCmd )
+
+                        Just Route.Logout ->
+                            let
+                                session =
+                                    model.session
+                            in
+                                ( { model | session = { session | user = Nothing, auth = Nothing } }
+                                , Cmd.batch
+                                    [ Ports.storeSession Nothing
+                                    , Route.modifyUrl Route.Signup
+                                    ]
+                                )
+
+                        Just (Route.Profile id) ->
+                            ( { model | pageState = Loaded NotFound }, userCmd )
 
 
 pageErrored : Model -> ActivePage -> String -> ( Model, Cmd msg )
@@ -174,6 +196,16 @@ updatePage page msg model =
         case ( msg, page ) of
             ( SetRoute route, _ ) ->
                 setRoute route model
+
+            ( LoadUser (Ok user), _ ) ->
+                let
+                    session =
+                        model.session
+
+                    newSession =
+                        { session | user = Just user }
+                in
+                    { model | session = newSession } => Cmd.none
 
             ( SignupLoaded (Ok subModel), _ ) ->
                 ( { model | pageState = Loaded (Signup subModel) }, Cmd.none )
@@ -285,5 +317,5 @@ viewPage session isLoading page =
                     |> Html.map SignupMsg
 
             Home ->
-                NotFound.view session
-                    |> frame Page.Other
+                Home.view session
+                    |> frame Page.Home
