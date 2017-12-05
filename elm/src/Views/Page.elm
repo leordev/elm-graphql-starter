@@ -12,6 +12,7 @@ import Views.Spinner exposing (spinnerIcon)
 type ActivePage
     = Other
     | Home
+    | Users
     | Signup
     | Profile UserId
     | Place
@@ -40,6 +41,7 @@ viewHeader page user isLoading =
             [ lazy2 Util.viewIf isLoading spinnerIcon
             , viewWelcomeUser user
             , navbarLink page Route.Home [ text "Home" ]
+            , navbarLink page Route.Users [ text "Users" ]
             , viewUserMenu page user
             , navbarLink page Route.Logout [ text "Sign Out" ]
             ]

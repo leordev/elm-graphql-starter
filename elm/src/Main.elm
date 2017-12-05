@@ -8,6 +8,7 @@ import Route exposing (Route)
 import Page.Errored as Errored exposing (PageLoadError)
 import Page.Signup as Signup exposing (Model)
 import Page.Home as Home
+import Page.Users as Users
 import Page.NotFound as NotFound
 import Views.Page as Page exposing (ActivePage)
 import Data.Session as Session exposing (Session)
@@ -38,6 +39,7 @@ type Page
     | NotFound
     | Errored PageLoadError
     | Home
+    | Users Users.Model
     | Signup Signup.Model
 
 
@@ -92,6 +94,7 @@ type Msg
     | SignupLoaded (Result PageLoadError Signup.Model)
     | SetUser (Maybe SignupPayload)
     | SignupMsg Signup.Msg
+    | UsersLoaded (Result PageLoadError Users.Model)
     | LoadUser (Result GQLHttp.Error User)
 
 
@@ -100,6 +103,10 @@ setRoute maybeRoute model =
     let
         errored =
             pageErrored model
+
+        transition toMsg task cmd =
+            { model | pageState = TransitioningFrom (getPage model.pageState) }
+                => Cmd.batch [ cmd, Task.attempt toMsg task ]
 
         logModel =
             Debug.log ">>>>> current model :" model
@@ -136,6 +143,9 @@ setRoute maybeRoute model =
 
                         Just Route.Home ->
                             ( { model | pageState = Loaded Home }, userCmd )
+
+                        Just Route.Users ->
+                            transition UsersLoaded (Users.init model.session) userCmd
 
                         Just Route.Logout ->
                             let
@@ -210,6 +220,14 @@ updatePage page msg model =
             ( SignupLoaded (Ok subModel), _ ) ->
                 ( { model | pageState = Loaded (Signup subModel) }, Cmd.none )
 
+            ( UsersLoaded (Ok subModel), _ ) ->
+                { model | pageState = Loaded (Users subModel) }
+                    => Cmd.none
+
+            ( UsersLoaded (Err error), _ ) ->
+                { model | pageState = Loaded (Errored error) }
+                    => Cmd.none
+
             ( SignupMsg subMsg, Signup subModel ) ->
                 let
                     ( ( signupModel, cmd ), msgFromSignup ) =
@@ -275,6 +293,9 @@ pageSubscriptions page =
         Home ->
             Sub.none
 
+        Users subModel ->
+            Sub.none
+
 
 
 -- VIEW
@@ -319,3 +340,7 @@ viewPage session isLoading page =
             Home ->
                 Home.view session
                     |> frame Page.Home
+
+            Users subModel ->
+                Users.view session subModel
+                    |> frame Page.Users

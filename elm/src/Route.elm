@@ -11,6 +11,7 @@ type Route
     = Home
     | Logout
     | Signup
+    | Users
     | Profile User.UserId
 
 
@@ -19,6 +20,7 @@ route =
     oneOf
         [ Url.map Home (s "home")
         , Url.map Logout (s "logout")
+        , Url.map Users (s "users")
         , Url.map Signup (s "")
         ]
 
@@ -34,6 +36,9 @@ routeToString page =
             case page of
                 Home ->
                     [ "home" ]
+
+                Users ->
+                    [ "users" ]
 
                 Logout ->
                     [ "logout" ]

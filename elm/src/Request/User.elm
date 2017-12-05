@@ -1,4 +1,4 @@
-module Request.User exposing (storeSession, signup, get)
+module Request.User exposing (storeSession, signup, get, listUsers)
 
 import GraphQL.Request.Builder exposing (..)
 import GraphQL.Request.Builder.Arg as Arg
@@ -28,6 +28,37 @@ storeSession data =
         |> Ports.storeSession
 
 
+userObject =
+    object User
+        |> with (field "id" [] (map UserId id))
+        |> with (field "email" [] string)
+        |> with (field "name" [] string)
+        |> with (field "bio" [] (nullable string))
+
+
+usersQuery : Request Query (List User)
+usersQuery =
+    let
+        pageSizeVar =
+            Var.optional "pageSize" .pageSize (Var.nullable Var.int) (Just 100)
+
+        queryRoot =
+            extract
+                (field "allUsers"
+                    [ ( "first", Arg.variable pageSizeVar ) ]
+                    (list userObject)
+                )
+    in
+        queryRoot
+            |> queryDocument
+            |> request { pageSize = Nothing }
+
+
+listUsers : Task GQLHttp.Error (List User)
+listUsers =
+    GQLHttp.sendQuery apiUrl usersQuery
+
+
 userQuery : Document Query User { vars | userId : String }
 userQuery =
     let
@@ -35,11 +66,7 @@ userQuery =
             Var.required "id" .userId Var.id
 
         user =
-            object User
-                |> with (field "id" [] (map UserId id))
-                |> with (field "email" [] string)
-                |> with (field "name" [] string)
-                |> with (field "bio" [] (nullable string))
+            userObject
 
         queryRoot =
             extract
