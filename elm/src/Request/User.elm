@@ -110,7 +110,7 @@ signupMutation signupMode =
                     , "password" => Arg.variable passwordVar
                     ]
                     (object AuthToken.SignupPayload
-                        |> with (field "id" [] string)
+                        |> with (field "id" [] (map UserId string))
                         |> with (field "token" [] (map AuthTokenStr string))
                     )
                 )

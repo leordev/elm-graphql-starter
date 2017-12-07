@@ -1,7 +1,8 @@
 module Page.Users exposing (view, Model, init)
 
+import Route
 import Data.Session as Session exposing (Session)
-import Html exposing (Html, div, h1, img, main_, text, p, ul, li)
+import Html exposing (Html, div, h1, img, main_, text, p, ul, li, a)
 import Html.Attributes exposing (alt, class, id, src, tabindex, style)
 import Util exposing ((=>))
 import Data.User exposing (User)
@@ -51,4 +52,4 @@ view session model =
 
 viewUser : User -> Html msg
 viewUser user =
-    li [] [ text user.name ]
+    li [] [ a [ Route.href (Route.Profile user.id) ] [ text user.name ] ]

@@ -42,6 +42,12 @@ a:hover {
     text-decoration: underline;
 }
 
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
 input, button {
     font-family: 'Open Sans', sans-serif;
     height: 40px;
@@ -122,6 +128,10 @@ button .sk-three-bounce .sk-child {
 
 .navbar .sk-three-bounce {
     margin: 0 15px;
+}
+
+.navbar .active {
+    font-weight: bold;
 }
 
 .error {

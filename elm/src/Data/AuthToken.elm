@@ -4,6 +4,7 @@ import HttpBuilder exposing (RequestBuilder, withHeader)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
+import Data.User as User exposing (userIdToString)
 import Util exposing ((=>))
 
 
@@ -12,7 +13,7 @@ type AuthTokenStr
 
 
 type alias SignupPayload =
-    { id : String
+    { id : User.UserId
     , token : AuthTokenStr
     }
 
@@ -30,7 +31,7 @@ authTokenToString (AuthTokenStr token) =
 encodeSignupPayload : SignupPayload -> Value
 encodeSignupPayload { id, token } =
     Encode.object
-        [ "id" => Encode.string id
+        [ "id" => Encode.string (userIdToString id)
         , "token" => Encode.string (authTokenToString token)
         ]
 
@@ -38,7 +39,7 @@ encodeSignupPayload { id, token } =
 decoder : Decoder SignupPayload
 decoder =
     decode SignupPayload
-        |> required "id" Decode.string
+        |> required "id" (Decode.map User.UserId Decode.string)
         |> required "token" (Decode.map AuthTokenStr Decode.string)
 
 

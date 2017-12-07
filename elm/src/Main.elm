@@ -9,6 +9,7 @@ import Page.Errored as Errored exposing (PageLoadError)
 import Page.Signup as Signup exposing (Model)
 import Page.Home as Home
 import Page.Users as Users
+import Page.Profile as Profile
 import Page.NotFound as NotFound
 import Views.Page as Page exposing (ActivePage)
 import Data.Session as Session exposing (Session)
@@ -40,6 +41,7 @@ type Page
     | Errored PageLoadError
     | Home
     | Users Users.Model
+    | Profile Profile.Model
     | Signup Signup.Model
 
 
@@ -94,7 +96,9 @@ type Msg
     | SignupLoaded (Result PageLoadError Signup.Model)
     | SetUser (Maybe SignupPayload)
     | SignupMsg Signup.Msg
+    | ProfileMsg Profile.Msg
     | UsersLoaded (Result PageLoadError Users.Model)
+    | ProfileLoaded (Result PageLoadError Profile.Model)
     | LoadUser (Result GQLHttp.Error User)
 
 
@@ -128,7 +132,7 @@ setRoute maybeRoute model =
                     userCmd =
                         case model.session.user of
                             Nothing ->
-                                Task.attempt LoadUser (Request.User.get (User.UserId auth.id))
+                                Task.attempt LoadUser (Request.User.get auth.id)
 
                             _ ->
                                 Cmd.none
@@ -160,7 +164,7 @@ setRoute maybeRoute model =
                                 )
 
                         Just (Route.Profile id) ->
-                            ( { model | pageState = Loaded NotFound }, userCmd )
+                            transition ProfileLoaded (Profile.init model.session id) userCmd
 
 
 pageErrored : Model -> ActivePage -> String -> ( Model, Cmd msg )
@@ -227,6 +231,25 @@ updatePage page msg model =
             ( UsersLoaded (Err error), _ ) ->
                 { model | pageState = Loaded (Errored error) }
                     => Cmd.none
+
+            ( ProfileLoaded (Ok subModel), _ ) ->
+                { model | pageState = Loaded (Profile subModel) }
+                    => Cmd.none
+
+            ( ProfileLoaded (Err error), _ ) ->
+                { model | pageState = Loaded (Errored error) }
+                    => Cmd.none
+
+            ( ProfileMsg subMsg, Profile subModel ) ->
+                let
+                    ( profileModel, cmd ) =
+                        Profile.update subMsg subModel
+
+                    newModel =
+                        model
+                in
+                    { newModel | pageState = Loaded (Profile profileModel) }
+                        => Cmd.map ProfileMsg cmd
 
             ( SignupMsg subMsg, Signup subModel ) ->
                 let
@@ -296,6 +319,9 @@ pageSubscriptions page =
         Users subModel ->
             Sub.none
 
+        Profile subModel ->
+            Sub.none
+
 
 
 -- VIEW
@@ -344,3 +370,8 @@ viewPage session isLoading page =
             Users subModel ->
                 Users.view session subModel
                     |> frame Page.Users
+
+            Profile subModel ->
+                Profile.view session subModel
+                    |> frame Page.Other
+                    |> Html.map ProfileMsg

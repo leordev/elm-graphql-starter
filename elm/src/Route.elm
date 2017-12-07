@@ -21,6 +21,7 @@ route =
         [ Url.map Home (s "home")
         , Url.map Logout (s "logout")
         , Url.map Users (s "users")
+        , Url.map Profile (s "profile" </> User.userIdParser)
         , Url.map Signup (s "")
         ]
 

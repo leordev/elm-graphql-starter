@@ -1,10 +1,11 @@
-module Data.User exposing (User, userIdToString, UserId(..), decoder, encode)
+module Data.User exposing (User, userIdToString, UserId(..), decoder, encode, userIdParser)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
 import Json.Encode.Extra as EncodeExtra
 import Util exposing ((=>))
+import UrlParser
 
 
 type UserId
@@ -22,6 +23,11 @@ type alias User =
 userIdToString : UserId -> String
 userIdToString (UserId id) =
     id
+
+
+userIdParser : UrlParser.Parser (UserId -> a) a
+userIdParser =
+    UrlParser.custom "USERID" (Ok << UserId)
 
 
 

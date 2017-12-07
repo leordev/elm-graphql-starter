@@ -95,6 +95,9 @@ isActive page route =
         ( Signup, Route.Signup ) ->
             True
 
+        ( Users, Route.Users ) ->
+            True
+
         ( Profile pageUsername, Route.Profile routeUsername ) ->
             pageUsername == routeUsername
 
