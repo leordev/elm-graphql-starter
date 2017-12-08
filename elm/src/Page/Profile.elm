@@ -10,7 +10,7 @@ import GraphQL.Client.Http as GQLHttp
 import Task exposing (Task)
 import Page.Errored as Errored exposing (PageLoadError, pageLoadError)
 import Views.Page as Page
-import Request.User
+import Request.User exposing (UpdatePayload)
 import Views.Forms as Forms
 
 
@@ -54,6 +54,7 @@ initModel user =
 
 type Msg
     = ProfileResponse (Result GQLHttp.Error User)
+    | UpdateResponse (Result GQLHttp.Error UpdatePayload)
     | SetEditMode
     | SetEmail String
     | SetBio String
@@ -68,11 +69,38 @@ update msg model =
         SetEmail email ->
             { model | email = email } => Cmd.none
 
+        SetName name ->
+            { model | name = name } => Cmd.none
+
         SetBio bio ->
             { model | bio = bio } => Cmd.none
 
+        SetPassword pass ->
+            { model | password = pass } => Cmd.none
+
         SetEditMode ->
             { model | edit = not model.edit } => Cmd.none
+
+        UpdateResponse (Ok res) ->
+            let
+                profile =
+                    model.profile
+
+                newProfile =
+                    { profile | name = model.name }
+            in
+                { model | profile = newProfile, edit = False } => Cmd.none
+
+        SaveProfile ->
+            let
+                user =
+                    { id = model.profile.id
+                    , email = model.email
+                    , bio = Just model.bio
+                    , name = model.name
+                    }
+            in
+                model => Task.attempt UpdateResponse (Request.User.update user)
 
         _ ->
             model => Cmd.none
@@ -131,7 +159,7 @@ viewProfile model authId =
 
         passwordField =
             if model.edit then
-                Forms.inputText edit
+                Forms.inputPassword edit
                     "Password (leave it blank if you don't want to change it)"
                     model.password
                     [ onInput SetPassword ]

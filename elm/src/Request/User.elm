@@ -1,4 +1,4 @@
-module Request.User exposing (storeSession, signup, get, listUsers)
+module Request.User exposing (storeSession, signup, get, listUsers, update, UpdatePayload)
 
 import GraphQL.Request.Builder exposing (..)
 import GraphQL.Request.Builder.Arg as Arg
@@ -18,6 +18,10 @@ type alias SignupVars =
     { email : String
     , password : String
     }
+
+
+type alias UpdatePayload =
+    { id : String }
 
 
 storeSession : AuthToken.SignupPayload -> Cmd msg
@@ -86,6 +90,46 @@ get userId =
                 |> request { userId = userIdToString userId }
     in
         GQLHttp.sendQuery apiUrl req
+
+
+updateMutation : Document Mutation UpdatePayload User
+updateMutation =
+    let
+        nameVar =
+            Var.required "name" .name Var.string
+
+        emailVar =
+            Var.required "email" .email Var.string
+
+        bioVar =
+            Var.optional "bio" .bio Var.string ""
+
+        idVar =
+            Var.required "id" (userIdToString << .id) Var.id
+    in
+        mutationDocument <|
+            extract
+                (field "updateUser"
+                    [ "id" => Arg.variable idVar
+                    , "email" => Arg.variable emailVar
+                    , "name" => Arg.variable nameVar
+                    , "bio" => Arg.variable bioVar
+                    ]
+                    (object UpdatePayload
+                        |> with (field "id" [] string)
+                    )
+                )
+
+
+updateMutationRequest : User -> Request Mutation UpdatePayload
+updateMutationRequest model =
+    updateMutation
+        |> request model
+
+
+update : User -> Task GQLHttp.Error UpdatePayload
+update model =
+    GQLHttp.sendMutation apiUrl (updateMutationRequest model)
 
 
 signupMutation : Bool -> Document Mutation AuthToken.SignupPayload SignupVars
